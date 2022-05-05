@@ -47,3 +47,6 @@ canvas#canvas{
   cursor: crosshair;
   z-index: -1;
 }
+html {
+  -webkit-tap-highlight-color: transparent;
+}
