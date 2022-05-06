@@ -46,6 +46,7 @@ canvas#canvas{
   top:70px;
   cursor: crosshair;
   z-index: -1;
+  touch-action: none;
 }
 html {
   -webkit-tap-highlight-color: transparent;

@@ -17,12 +17,13 @@ canvas.id = 'canvas';
 const context = canvas.getContext('2d');
 
 let currentPenSize = 10;
-let currBucketColor = '#efefef';
-let currPenColor = '#A51DAB';
+let currBucketColor = '#fff';
+let currPenColor = '#000000';
 let isEraser = false;
 let isMouseDown = false;
 let drawnArray = [];
 let currentDrawState = {};
+let isTouched = false;
 // Setting background color
 bucketColor.addEventListener('input', () => {
     currBucketColor = bucketColor.firstElementChild.value;
@@ -46,7 +47,7 @@ eraser.addEventListener('click', () => {
         }
     })
     eraser.classList.add('selected-icon-style');
-    currPenColor = bucketColor;
+    currPenColor = currBucketColor;
     currentPenSize = 50;
     penWidth.firstElementChild.value = currentPenSize;
 });
@@ -91,17 +92,24 @@ createCanvas();
 
 // Draw What is Stored in drawn array
 function restoreCanvas() {
-    for (let i = 0; i < drawnArray.length - 1; i++) {
+    for (let i = 1; i < drawnArray.length; i++) {
         context.beginPath();
-        context.moveTo(drawnArray[i].x, drawnArray[i].y);
-        context.lineWidth = drawnArray[i].size;
+
+        // we first move where we have to start the drawing
+        context.moveTo(drawnArray[i - 1].x, drawnArray[i - 1].y);
+
+        // Setting Up The initials 
+        context.lineWidth = drawnArray[i - 1].size;
         context.lineCap = 'round';
-        if (drawnArray[i].erase) {
+        if (drawnArray[i - 1].erase) {
             context.strokeStyle = bucketColor;
         } else {
-            context.strokeStyle = drawnArray[i].color;
+            context.strokeStyle = drawnArray[i - 1].color;
         }
-        context.lineTo(drawnArray[i + 1].x, drawnArray[i + 1].y);
+
+        // Drawing the line
+        context.lineTo(drawnArray[i].x, drawnArray[i].y);
+        // adding stroke to lines
         context.stroke();
     }
 }
@@ -134,7 +142,9 @@ function getMousePosition(event) {
     };
 }
 
+// mouse click to draw
 canvas.addEventListener('mousedown', (event) => {
+    // console.log("mstrt");
     isMouseDown = true;
     const currentPosition = getMousePosition(event);
     context.moveTo(currentPosition.x, currentPosition.y);
@@ -142,9 +152,15 @@ canvas.addEventListener('mousedown', (event) => {
     context.lineWidth = currentPenSize;
     context.lineCap = 'round';
     context.strokeStyle = currPenColor;
+
+    // Storing Undefined For One Time 
+    // So there will be breakpoint 
+    storeDrawn(undefined);
 })
 
+// while clicked move to draw
 canvas.addEventListener('mousemove', (event) => {
+    // console.log("mmove");
     if (isMouseDown) {
         const currentPosition = getMousePosition(event);
         context.lineTo(currentPosition.x, currentPosition.y);
@@ -157,14 +173,20 @@ canvas.addEventListener('mousemove', (event) => {
             isEraser
         );
     }
-    else {
-        storeDrawn(undefined);
-    }
+    // else {
+    //     //     // Storing Undefined For One Time 
+    //     console.log(drawnArray.length);
+    //     if (Object.keys(drawnArray[drawnArray.length - 1]).length !== 0) {
+    //         console.log("store");
+    //         storeDrawn(undefined);
+    //     }
+    // }
 })
 
+// unclicked to stop the drawing
 canvas.addEventListener('mouseup', (event) => {
+    // console.log("mend");
     isMouseDown = false;
-
 })
 
 
@@ -172,7 +194,9 @@ canvas.addEventListener('mouseup', (event) => {
 // Get Touch Position
 function getTouchPosition(event) {
     const boundaries = canvas.getBoundingClientRect();
-    // console.log(event.touches);
+    // console.log(event.touches[0].screenX, event.touches[0].screenY);
+    // console.log(event.touches[0].clientX, event.touches[0].clientY);
+
     return {
         x: event.touches[0].clientX - boundaries.left,
         y: event.touches[0].clientY - boundaries.top,
@@ -180,19 +204,29 @@ function getTouchPosition(event) {
 }
 
 canvas.addEventListener('touchstart', (event) => {
-    isMouseDown = true;
+    isTouched = true;
+    // console.log("tstrt");
     const currentPosition = getTouchPosition(event);
     context.moveTo(currentPosition.x, currentPosition.y);
     context.beginPath();
     context.lineWidth = currentPenSize;
     context.lineCap = 'round';
     context.strokeStyle = currPenColor;
+
+    /* 
+    To avoid merging all the context of drawing bcoz there is no event for for hover touch
+    which we can get the context first from where we start 
+    Undefined is added to add break point between two drawn shape
+    */
+    storeDrawn(undefined);
     // console.log(currentPosition);
 })
 
 canvas.addEventListener('touchmove', (event) => {
-    if (isMouseDown) {
+    // console.log("tmove");
+    if (isTouched) {
         const currentPosition = getTouchPosition(event);
+        // console.log(currentPosition);
         context.lineTo(currentPosition.x, currentPosition.y);
         context.stroke();
         storeDrawn(
@@ -209,8 +243,8 @@ canvas.addEventListener('touchmove', (event) => {
 })
 
 canvas.addEventListener('touchend', (event) => {
-    isMouseDown = false;
-
+    // console.log("tend");
+    isTouched = false;
 })
 
 
