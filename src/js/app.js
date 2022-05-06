@@ -28,6 +28,8 @@ let currentDrawState = -1;
 let eachStateArray = [];
 let isTouched = false;
 let isPrevUndo = -1;
+
+
 // Setting background color
 bucketColor.addEventListener('input', () => {
     currBucketColor = bucketColor.firstElementChild.value;
@@ -114,7 +116,7 @@ function switchToPen() {
 // Create Canvas
 function createCanvas() {
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight - 75;
+    canvas.height = window.innerHeight - 20;
     context.fillStyle = currBucketColor;
     context.fillRect(0, 0, canvas.width, canvas.height);
     body.appendChild(canvas);

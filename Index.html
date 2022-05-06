@@ -11,94 +11,129 @@
     <link rel="stylesheet" href="src/Style/style.css">
     <script src="src/js/app.js" type="module" defer></script>
 
-    <title>Document</title>
+    <title>WhiteBoard</title>
 </head>
 
 <body class="mt-24 ">
-    <header class="fixed top-0 left-0 p-4 w-full bg-gray-900 shadow-md shadow-gray-4 text-[1.5rem]00">
-        <nav class="flex w-11/12 m-auto">
-            <div class="flex basis-1/4 items-center">
+    <header class="fixed top-0 left-0 p-4 w-full bg-white shadow-md shadow-gray-4 text-[1.5rem]00">
+        <nav class="layer-1 flex justify-evenly md:justify-between w-11/12 m-auto">
+            <!-- Save to local storage -->
+            <div class="items-center hidden md:flex">
+                <div class="text-3xl font-bold">
+                    <h1 class="text-gray-700">WhiteBoard</h1>
+                </div>
+            </div>
+
+            <div class="flex w-full items-center justify-around md:basis-1/2  md:justify-between text-gray-700 ">
+                <!-- save to local storage -->
+                <button class="save-storage flex" title="save local storage">
+                    <i class="fa-solid fa-download text-[1.5rem]"></i>
+                    <h1 class="ml-1 text-[1.2rem] font-bold hidden sm:block">
+                        Save
+                    </h1>
+                </button>
+
+                <!-- load from local storage -->
+                <button class="load-storage flex " title="load from local storage">
+                    <i class="fa-solid fa-upload text-[1.5rem]"></i>
+                    <h1 class="ml-1 text-[1.2rem] font-bold  hidden sm:block">
+                        Load
+                    </h1>
+                </button>
+
+                <!-- delete from local storage -->
+                <button class="delete-storage flex items-center" title="delete from local storage">
+                    <i class="fa-solid fa-trash text-[1.3rem]"></i>
+                    <h1 class="ml-1 text-[1.2rem] font-bold  hidden sm:block">
+                        Delete
+                    </h1>
+                </button>
+
+                <!-- save as img -->
+                <button class="save-image " title="save as image">
+                    <a class="flex items-center">
+                        <i class="fa-solid fa-floppy-disk text-[1.5rem]"></i>
+                        <h1 class="ml-1 text-[1.2rem] font-bold  hidden sm:block">
+                            Image
+                        </h1>
+                    </a>
+                </button>
+            </div>
+        </nav>
+        <hr class="my-4">
+        <nav class="layer-2 flex justify-between w-11/12 m-auto">
+            <div class="flex  items-center">
                 <div class="text-xl font-bold bg-gray-600 px-4 py-2 rounded-lg">
                     <h1 class="text-white selected-tools">Pen </h1>
                 </div>
             </div>
-            <div class="flex basis-3/4 items-center justify-between text-gray-700 ">
-
-                <!-- Pen -->
-                <div class="pen-container flex items-center justify-between">
-                    <!-- Icon -->
-                    <div class="pen header-icons-styles selected-icon-style" title="pen"><i
-                            class="fa-solid fa-pen-clip text-[1.4rem]"></i>
-                    </div>
-
-                    <!-- Color Selector -->
-                    <div class="pen-color w-[2.8rem] aspect-square rounded-full overflow-hidden relative ml-4 border-4 border-white" title=" color selector">
-                        <input type="color" id="head" name="head" value="#000000"
-                            class="w-20 h-20 absolute top-[-1rem] left-[-1rem]">
-                    </div>
-
-                    <!-- Pen Width -->
-                    <div class="pen-slider slidecontainer ml-4 flex items-center " title="pen width">
-                        <input type="range" min="1" max="50" value="10" class="slider" id="myRange">
-                    </div>
+            <div class="hidden">
+                <!-- Color Selector -->
+                <div class="pen-color w-[2.8rem] aspect-square rounded-full overflow-hidden relative border-4 border-white"
+                    title=" color selector">
+                    <input type="color" id="head" name="head" value="#000000"
+                        class="w-20 h-20 absolute top-[-1rem] left-[-1rem]">
                 </div>
 
-                <!-- Background Color -->
-                <div class="background-container flex items-center justify-between">
-                    <!-- Icon -->
-                    <div class="bucket-set header-icons-styles" title="change background color">
-                        <i class="fa-solid fa-fill text-[1.5rem]"></i>
-                    </div>
+                <!-- Pen Width -->
+                <div class="pen-slider slidecontainer flex items-center " title="pen width">
+                    <input type="range" min="1" max="50" value="10" class="slider" id="myRange">
+                </div>
+            </div>
+            <div class="flex items-center gap-12 text-gray-700 ">
 
+                <div class="flex gap-6">
+                    <!-- Undo -->
+                    <button class="undo ">
+                        <i class="fa-solid fa-rotate-left text-[1.5rem]"></i>
+                    </button>
+
+                    <!-- Redo -->
+                    <button class="redo ">
+                        <i class="fa-solid fa-rotate-right text-[1.5rem]"></i>
+                    </button>
+                </div>
+
+                <!-- Clear -->
+                <button class="clear " title="clear">
+                    <i class="fa-solid fa-xmark text-[1.8rem]"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+    <main class="absolute left-6 top-[50%] -translate-y-[30%] bg-black px-4 py-6 rounded-full overflow-hidden">
+        <div class="tools left flex flex-col gap-6">
+            <!-- Pen -->
+            <div class="pen-container flex flex-col items-center justify-between">
+                <!-- Icon -->
+                <div class="pen header-icons-styles selected-icon-style" title="pen"><i
+                        class="fa-solid fa-pen-clip text-[1.4rem]"></i>
+                </div>
+
+            </div>
+
+            <!-- Background Color -->
+            <div class="background-container flex items-center justify-between">
+                <!-- Icon -->
+                <div class="bucket-set header-icons-styles" title="change background color">
+                    <i class="fa-solid fa-fill text-[1.5rem]"></i>
+                </div>
+
+                <div class="hidden">
                     <!-- Color selector -->
-                    <div class="bucket-color w-[2.8rem] aspect-square rounded-full overflow-hidden relative ml-4 border-4 border-white" title=" color selector">
+                    <div class="bucket-color w-[2.8rem] aspect-square rounded-full overflow-hidden relative border-4 border-white"
+                        title=" color selector">
                         <input type="color" id="head" name="head" value="#ffffff"
                             class="w-20 h-20 absolute top-[-1rem] left-[-1rem]">
                     </div>
                 </div>
-
-                <!-- Eraser -->
-                <div class="eraser header-icons-styles" title="eraser">
-                    <i class="fa-solid fa-eraser text-[1.5rem]"></i>
-                </div>
-
-                <!-- Clear -->
-                <div class="clear header-icons-styles" title="clear">
-                    <i class="fa-solid fa-arrow-rotate-left text-[1.5rem]"></i>
-                </div>
-
-                <!-- Save to local storage -->
-                <div class="save-storage header-icons-styles" title="save local storage">
-                    <i class="fa-solid fa-download text-[1.5rem]"></i>
-                </div>
-
-                <!-- load from local storage -->
-                <div class="load-storage header-icons-styles" title="load from local storage">
-                    <i class="fa-solid fa-upload text-[1.5rem]"></i>
-                </div>
-
-                <!-- delete from local storage -->
-                <div class="delete-storage header-icons-styles" title="delete from local storage">
-                    <i class="fa-solid fa-trash text-[1.4rem]"></i>
-                </div>
-
-                <!-- save as img -->
-                <div class="save-image header-icons-styles" title="save as image">
-                    <a>
-                        <i class="fa-solid fa-floppy-disk text-[1.5rem]"></i>
-                    </a>
-                </div>
             </div>
-        </nav>
-    </header>
-    <main class=" w-24 absolute">
-        <div class="left flex flex-col">
-            <div class="redo header-icons-styles">
-                <i class="fa-solid fa-rotate-right text-[1.5rem]"></i>
+
+            <!-- Eraser -->
+            <div class="eraser header-icons-styles" title="eraser">
+                <i class="fa-solid fa-eraser text-[1.5rem]"></i>
             </div>
-            <div class="undo header-icons-styles">
-                <i class="fa-solid fa-rotate-left text-[1.5rem]"></i>
-            </div>
+
         </div>
     </main>
 </body>

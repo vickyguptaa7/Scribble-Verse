@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 .header-icons-styles {
-  @apply ml-4 w-[2.8rem] aspect-square bg-white flex justify-center items-center rounded-full hover:scale-110 duration-300 ease-in-out active:scale-90 cursor-pointer;
+  @apply w-[2.8rem] aspect-square bg-white flex justify-center items-center rounded-full hover:scale-110 duration-300 ease-in-out active:scale-90 cursor-pointer;
 }
 
 .selected-icon-style {
@@ -15,12 +15,14 @@
   -webkit-appearance: none;
   width: 100%;
   height: 15px;
-  border-radius: 5px;  
+  border-radius: 5px;
   background: #bbbbbb;
   outline: none;
   opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
+  -webkit-transition: 0.2s;
+  transform: rotate(270deg);
+
+  transition: opacity 0.2s;
 }
 
 .slider::-webkit-slider-thumb {
@@ -28,7 +30,7 @@
   appearance: none;
   width: 25px;
   height: 25px;
-  border-radius: 50%; 
+  border-radius: 50%;
   background: #363737;
   cursor: pointer;
 }
@@ -41,9 +43,10 @@
   cursor: pointer;
 }
 
-canvas#canvas{
+canvas#canvas {
   position: absolute;
-  top:70px;
+  top: 20px;
+  left: 0;
   cursor: crosshair;
   z-index: -1;
   touch-action: none;
