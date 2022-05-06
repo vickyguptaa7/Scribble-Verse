@@ -24,7 +24,7 @@ let currPenColor = '#000000';
 let isEraser = false;
 let isMouseDown = false;
 let drawnArray = [];
-let currentDrawState = 0;
+let currentDrawState = -1;
 let eachStateArray = [];
 let isTouched = false;
 let isPrevUndo = -1;
@@ -71,43 +71,26 @@ redo.addEventListener('click', redoOperations)
 
 // Undo Functions
 function undoOperation() {
-
-    // This Check Is To Skip The Empty Object 
-    if (isPrevUndo === false) {
-        isPrevUndo = true;
-        undoOperation();
+    if (currentDrawState < 0) {
+        return;
     }
-    for (let state = currentDrawState; state >= 0; state--) {
-        if (drawnArray[state] && Object.keys(drawnArray[state]).length === 0) {
-            currentDrawState = state - 1;
-            createCanvas();
-            restoreCanvas();
-            selectedTool.textContent = 'Undo';
-            setTimeout(switchToPen, 1500);
-            break;
-        }
-    }
+    currentDrawState--;
+    createCanvas();
+    restoreCanvas();
+    selectedTool.textContent = 'Undo';
+    setTimeout(switchToPen, 1000);
 }
 
 // redoOperations
 function redoOperations() {
-    // While undo we decrease one extra to remove the empty object so to avoid that empty object we skip by one
-    if (isPrevUndo === true) {
-        isPrevUndo = false;
-        redoOperations();
-        // Make A function And Call This Function
+    if (drawnArray.length - 1 === currentDrawState) {
+        return
     }
-    for (let state = currentDrawState; state < drawnArray.length; state++) {
-        if ((drawnArray[state] && Object.keys(drawnArray[state]).length === 0) || state == drawnArray.length - 1) {
-            currentDrawState = state;
-            createCanvas();
-            restoreCanvas();
-            selectedTool.textContent = 'Redo';
-            setTimeout(switchToPen, 1500);
-            break;
-        }
-    }
-    if (currentDrawState < drawnArray.length - 1) currentDrawState++;
+    currentDrawState++;
+    createCanvas();
+    restoreCanvas();
+    selectedTool.textContent = 'Redo';
+    setTimeout(switchToPen, 1000);
 }
 
 // Switch From Eraser To Pen
@@ -142,7 +125,7 @@ createCanvas();
 
 // Draw What is Stored in drawn array
 function restoreCanvas() {
-    for (let j = 0; j < drawnArray.length; j++) {
+    for (let j = 0; j <= currentDrawState; j++) {
         for (let i = 1; i < drawnArray[j].length; i++) {
 
             context.beginPath();
@@ -209,10 +192,8 @@ canvas.addEventListener('mousedown', (event) => {
     context.lineCap = 'round';
     context.strokeStyle = currPenColor;
 
-    // Storing Undefined For One Time 
-    // So there will be breakpoint 
+    // Store the data untill the mouse is up
     eachStateArray = [];
-    // storeDrawn(undefined);
 })
 
 // while clicked move to draw
@@ -230,20 +211,21 @@ canvas.addEventListener('mousemove', (event) => {
             isEraser
         );
     }
-    // else {
-    //     //     // Storing Undefined For One Time 
-    //     console.log(drawnArray.length);
-    //     if (Object.keys(drawnArray[drawnArray.length - 1]).length !== 0) {
-    //         console.log("store");
-    //         storeDrawn(undefined);
-    //     }
-    // }
 })
 
 // unclicked to stop the drawing
 canvas.addEventListener('mouseup', (event) => {
     // console.log("mend");
-    if (eachStateArray.length !== 0){
+    if (eachStateArray.length !== 0) {
+
+        // Avoid Small Bug That When We Get single object for which we cant draw anything so we add one more object
+        // One For The Reference of the start from where to start 
+        if (eachStateArray.length === 1) {
+            const tempObj = { ...eachStateArray[0] };
+            tempObj.x += 0.0001;
+            eachStateArray.push(tempObj);
+            console.log(eachStateArray);
+        }
         drawnArray.push(eachStateArray);
         currentDrawState = drawnArray.length - 1;
     }
@@ -274,13 +256,8 @@ canvas.addEventListener('touchstart', (event) => {
     context.lineCap = 'round';
     context.strokeStyle = currPenColor;
 
-    /* 
-    To avoid merging all the context of drawing bcoz there is no event for for hover touch
-    which we can get the context first from where we start 
-    Undefined is added to add break point between two drawn shape
-    */
-    storeDrawn(undefined);
-    // console.log(currentPosition);
+    // Store the data untill the touch is end
+    eachStateArray = [];
 })
 
 canvas.addEventListener('touchmove', (event) => {
@@ -302,6 +279,20 @@ canvas.addEventListener('touchmove', (event) => {
 
 canvas.addEventListener('touchend', (event) => {
     // console.log("tend");
+    // console.log("mend");
+    if (eachStateArray.length !== 0) {
+
+        // Avoid Small Bug That When We Get single object for which we cant draw anything so we add one more object
+        // One For The Reference of the start from where to start 
+        if (eachStateArray.length === 1) {
+            const tempObj = { ...eachStateArray[0] };
+            tempObj.x += 0.0001;
+            eachStateArray.push(tempObj);
+            console.log(eachStateArray);
+        }
+        drawnArray.push(eachStateArray);
+        currentDrawState = drawnArray.length - 1;
+    }
     isTouched = false;
 })
 
