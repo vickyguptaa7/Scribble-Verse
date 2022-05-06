@@ -11,6 +11,8 @@ const selectedTool = document.querySelector('.selected-tools');
 const saveStorage = document.querySelector('.save-storage');
 const loadStorage = document.querySelector('.load-storage');
 const deleteStorage = document.querySelector('.delete-storage');
+const undo = document.querySelector('.undo');
+const redo = document.querySelector('.redo');
 
 const canvas = document.createElement('canvas');
 canvas.id = 'canvas';
@@ -22,8 +24,10 @@ let currPenColor = '#000000';
 let isEraser = false;
 let isMouseDown = false;
 let drawnArray = [];
-let currentDrawState = {};
+let currentDrawState = 0;
+let eachStateArray = [];
 let isTouched = false;
+let isPrevUndo = -1;
 // Setting background color
 bucketColor.addEventListener('input', () => {
     currBucketColor = bucketColor.firstElementChild.value;
@@ -60,6 +64,52 @@ penWidth.addEventListener('change', () => {
 // pen
 pen.addEventListener('click', switchToPen);
 
+undo.addEventListener('click', undoOperation)
+
+redo.addEventListener('click', redoOperations)
+
+
+// Undo Functions
+function undoOperation() {
+
+    // This Check Is To Skip The Empty Object 
+    if (isPrevUndo === false) {
+        isPrevUndo = true;
+        undoOperation();
+    }
+    for (let state = currentDrawState; state >= 0; state--) {
+        if (drawnArray[state] && Object.keys(drawnArray[state]).length === 0) {
+            currentDrawState = state - 1;
+            createCanvas();
+            restoreCanvas();
+            selectedTool.textContent = 'Undo';
+            setTimeout(switchToPen, 1500);
+            break;
+        }
+    }
+}
+
+// redoOperations
+function redoOperations() {
+    // While undo we decrease one extra to remove the empty object so to avoid that empty object we skip by one
+    if (isPrevUndo === true) {
+        isPrevUndo = false;
+        redoOperations();
+        // Make A function And Call This Function
+    }
+    for (let state = currentDrawState; state < drawnArray.length; state++) {
+        if ((drawnArray[state] && Object.keys(drawnArray[state]).length === 0) || state == drawnArray.length - 1) {
+            currentDrawState = state;
+            createCanvas();
+            restoreCanvas();
+            selectedTool.textContent = 'Redo';
+            setTimeout(switchToPen, 1500);
+            break;
+        }
+    }
+    if (currentDrawState < drawnArray.length - 1) currentDrawState++;
+}
+
 // Switch From Eraser To Pen
 function switchToPen() {
     isEraser = false;
@@ -92,25 +142,28 @@ createCanvas();
 
 // Draw What is Stored in drawn array
 function restoreCanvas() {
-    for (let i = 1; i < drawnArray.length; i++) {
-        context.beginPath();
+    for (let j = 0; j < drawnArray.length; j++) {
+        for (let i = 1; i < drawnArray[j].length; i++) {
 
-        // we first move where we have to start the drawing
-        context.moveTo(drawnArray[i - 1].x, drawnArray[i - 1].y);
+            context.beginPath();
 
-        // Setting Up The initials 
-        context.lineWidth = drawnArray[i - 1].size;
-        context.lineCap = 'round';
-        if (drawnArray[i - 1].erase) {
-            context.strokeStyle = bucketColor;
-        } else {
-            context.strokeStyle = drawnArray[i - 1].color;
+            // we first move where we have to start the drawing
+            context.moveTo(drawnArray[j][i - 1].x, drawnArray[j][i - 1].y);
+
+            // Setting Up The initials 
+            context.lineWidth = drawnArray[j][i - 1].size;
+            context.lineCap = 'round';
+            if (drawnArray[j][i - 1].erase) {
+                context.strokeStyle = currBucketColor;
+            } else {
+                context.strokeStyle = drawnArray[j][i - 1].color;
+            }
+
+            // Drawing the line
+            context.lineTo(drawnArray[j][i].x, drawnArray[j][i].y);
+            // adding stroke to lines
+            context.stroke();
         }
-
-        // Drawing the line
-        context.lineTo(drawnArray[i].x, drawnArray[i].y);
-        // adding stroke to lines
-        context.stroke();
     }
 }
 
@@ -119,7 +172,10 @@ function storeDrawn(x, y, size, color, erase) {
         x, y, size, color, erase,
     };
     // console.log(line);
-    drawnArray.push(line);
+    if (drawnArray.length != currentDrawState) {
+        drawnArray = drawnArray.splice(0, currentDrawState + 1);
+    }
+    eachStateArray.push(line);
 }
 
 
@@ -155,7 +211,8 @@ canvas.addEventListener('mousedown', (event) => {
 
     // Storing Undefined For One Time 
     // So there will be breakpoint 
-    storeDrawn(undefined);
+    eachStateArray = [];
+    // storeDrawn(undefined);
 })
 
 // while clicked move to draw
@@ -186,6 +243,10 @@ canvas.addEventListener('mousemove', (event) => {
 // unclicked to stop the drawing
 canvas.addEventListener('mouseup', (event) => {
     // console.log("mend");
+    if (eachStateArray.length !== 0){
+        drawnArray.push(eachStateArray);
+        currentDrawState = drawnArray.length - 1;
+    }
     isMouseDown = false;
 })
 
@@ -237,9 +298,6 @@ canvas.addEventListener('touchmove', (event) => {
             isEraser
         );
     }
-    else {
-        storeDrawn(undefined);
-    }
 })
 
 canvas.addEventListener('touchend', (event) => {
@@ -261,6 +319,7 @@ saveStorage.addEventListener('click', () => {
 loadStorage.addEventListener('click', () => {
     if (localStorage.getItem('saveCanvas')) {
         drawnArray = JSON.parse(localStorage.saveCanvas);
+        currentDrawState = drawnArray.length - 1;
         selectedTool.textContent = 'Canvas Loaded';
         restoreCanvas();
         setTimeout(switchToPen, 1500);
