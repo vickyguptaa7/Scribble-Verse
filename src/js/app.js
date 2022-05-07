@@ -1,4 +1,4 @@
-const body = document.body;
+const forCanvas = document.querySelector('.for-canvas');
 const pen = document.querySelector('.pen');
 const penColor = document.querySelector('.pen-color');
 const penWidth = document.querySelector('.pen-slider');
@@ -13,6 +13,7 @@ const loadStorage = document.querySelector('.load-storage');
 const deleteStorage = document.querySelector('.delete-storage');
 const undo = document.querySelector('.undo');
 const redo = document.querySelector('.redo');
+const header = document.querySelector('header');
 
 const canvas = document.createElement('canvas');
 canvas.id = 'canvas';
@@ -28,7 +29,6 @@ let currentDrawState = -1;
 let eachStateArray = [];
 let isTouched = false;
 let isPrevUndo = -1;
-
 
 // Setting background color
 bucketColor.addEventListener('input', () => {
@@ -115,13 +115,42 @@ function switchToPen() {
 
 // Create Canvas
 function createCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight - 20;
+    canvas.width = window.innerWidth * (0.87);
+    canvas.height = window.innerHeight - header.offsetHeight - 50;
     context.fillStyle = currBucketColor;
     context.fillRect(0, 0, canvas.width, canvas.height);
-    body.appendChild(canvas);
+    forCanvas.appendChild(canvas);
     switchToPen();
 }
+
+function restoreDataDueToResize() {
+    // this function will avoid the hiding of the drawn object when canvas is resized.
+    if (drawnArray.length === 0) return;
+    let newWidth = canvas.offsetWidth;
+    let newHeight = canvas.offsetHeight;
+    let oldHeight = drawnArray[0][0].h;
+    let oldWidth = drawnArray[0][0].w;
+
+    let wratio = newWidth / oldWidth;
+    let hratio = newHeight / oldHeight;
+
+    for (let i = 0; i < drawnArray.length; i++) {
+        for (let j = 0; j < drawnArray[i].length; j++) {
+            drawnArray[i][j].w = newWidth;
+            drawnArray[i][j].h = newHeight;
+            drawnArray[i][j].x *= wratio;
+            drawnArray[i][j].y *= hratio;
+            drawnArray[i][j].size *= (hratio + wratio) / 2;
+        }
+    }
+}
+
+window.addEventListener('resize', () => {
+    createCanvas();
+    console.log("Hello");
+    restoreDataDueToResize();
+    restoreCanvas();
+});
 
 createCanvas();
 
@@ -152,9 +181,9 @@ function restoreCanvas() {
     }
 }
 
-function storeDrawn(x, y, size, color, erase) {
+function storeDrawn(x, y, size, color, erase, h, w) {
     const line = {
-        x, y, size, color, erase,
+        x, y, size, color, erase, h, w,
     };
     // console.log(line);
     if (drawnArray.length != currentDrawState) {
@@ -180,6 +209,8 @@ function getMousePosition(event) {
     return {
         x: event.clientX - boundaries.left,
         y: event.clientY - boundaries.top,
+        h: boundaries.height,
+        w: boundaries.width
     };
 }
 
@@ -210,7 +241,9 @@ canvas.addEventListener('mousemove', (event) => {
             currentPosition.y,
             currentPenSize,
             currPenColor,
-            isEraser
+            isEraser,
+            currentPosition.h,
+            currentPosition.w,
         );
     }
 })
@@ -245,6 +278,8 @@ function getTouchPosition(event) {
     return {
         x: event.touches[0].clientX - boundaries.left,
         y: event.touches[0].clientY - boundaries.top,
+        h: boundaries.height,
+        w: boundaries.width
     };
 }
 
@@ -274,7 +309,9 @@ canvas.addEventListener('touchmove', (event) => {
             currentPosition.y,
             currentPenSize,
             currPenColor,
-            isEraser
+            isEraser,
+            currentPosition.h,
+            currentPosition.w,
         );
     }
 })

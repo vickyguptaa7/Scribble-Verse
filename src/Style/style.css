@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 .header-icons-styles {
-  @apply w-[2.8rem] aspect-square bg-white flex justify-center items-center rounded-full hover:scale-110 duration-300 ease-in-out active:scale-90 cursor-pointer;
+  @apply w-[2.8rem] aspect-square bg-white flex justify-center items-center rounded-full hover:bg-gray-200 duration-300 ease-in-out active:scale-90 cursor-pointer;
 }
 
 .selected-icon-style {
@@ -20,8 +20,6 @@
   outline: none;
   opacity: 0.7;
   -webkit-transition: 0.2s;
-  transform: rotate(270deg);
-
   transition: opacity 0.2s;
 }
 
@@ -45,11 +43,14 @@
 
 canvas#canvas {
   position: absolute;
-  top: 20px;
-  left: 0;
+  bottom: 25px;
+  left: 8%;
   cursor: crosshair;
   z-index: -1;
   touch-action: none;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  border: 2px solid rgb(192, 192, 192);
 }
 html {
   -webkit-tap-highlight-color: transparent;
