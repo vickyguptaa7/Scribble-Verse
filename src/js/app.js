@@ -115,7 +115,7 @@ function switchToPen() {
 
 // Create Canvas
 function createCanvas() {
-    canvas.width = window.innerWidth * (0.87);
+    canvas.width = window.innerWidth * (0.95);
     canvas.height = window.innerHeight - header.offsetHeight - 50;
     context.fillStyle = currBucketColor;
     context.fillRect(0, 0, canvas.width, canvas.height);

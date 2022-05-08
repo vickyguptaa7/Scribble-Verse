@@ -44,7 +44,7 @@
 canvas#canvas {
   position: absolute;
   bottom: 25px;
-  left: 8%;
+  left: 2%;
   cursor: crosshair;
   z-index: -1;
   touch-action: none;
