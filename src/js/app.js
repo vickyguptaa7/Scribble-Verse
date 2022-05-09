@@ -32,7 +32,7 @@ let currentDrawState = -1;
 let eachStateArray = [];
 let isTouched = false;
 let isPrevUndo = -1;
-let currShapeDraw = 'freeHand';
+let currShapeDraw = 'pen';
 
 // diff shapes
 diffShapes.addEventListener('click', () => {
@@ -43,7 +43,7 @@ diffShapes.addEventListener('click', () => {
 
 allShapesBtn.forEach(shapeBtn => {
     shapeBtn.addEventListener('click', () => {
-        isEraser=false;
+        isEraser = false;
         currShapeDraw = shapeBtn.getAttribute('data-value');
         selectedTool.textContent = shapeBtn.getAttribute('data-value');
     })
@@ -116,6 +116,7 @@ function redoOperations() {
 
 // Switch From Eraser To Pen
 function switchToPen() {
+    currShapeDraw = 'pen';
     isEraser = false;
     selectedTool.textContent = 'Pen';
     currPenColor = penColor.firstElementChild.value;
@@ -177,24 +178,31 @@ function restoreCanvas() {
     for (let j = 0; j <= currentDrawState; j++) {
         for (let i = 1; i < drawnArray[j].length; i++) {
 
-            context.beginPath();
+            if (drawnArray[j][i].shape === 'pen') {
+                context.beginPath();
+                // we first move where we have to start the drawing
+                context.moveTo(drawnArray[j][i - 1].x, drawnArray[j][i - 1].y);
 
-            // we first move where we have to start the drawing
-            context.moveTo(drawnArray[j][i - 1].x, drawnArray[j][i - 1].y);
+                // Setting Up The initials 
+                context.lineWidth = drawnArray[j][i - 1].size;
+                context.lineCap = 'round';
+                if (drawnArray[j][i - 1].erase) {
+                    context.strokeStyle = currBucketColor;
+                } else {
+                    context.strokeStyle = drawnArray[j][i - 1].color;
+                }
 
-            // Setting Up The initials 
-            context.lineWidth = drawnArray[j][i - 1].size;
-            context.lineCap = 'round';
-            if (drawnArray[j][i - 1].erase) {
-                context.strokeStyle = currBucketColor;
-            } else {
-                context.strokeStyle = drawnArray[j][i - 1].color;
+                // Drawing the line
+                context.lineTo(drawnArray[j][i].x, drawnArray[j][i].y);
+                // adding stroke to lines
+                context.stroke();
             }
-
-            // Drawing the line
-            context.lineTo(drawnArray[j][i].x, drawnArray[j][i].y);
-            // adding stroke to lines
-            context.stroke();
+            else {
+                context.moveTo(drawnArray[j][i - 1].x, drawnArray[j][i - 1].y);
+                context.beginPath();
+                drawShapes(drawnArray[j]);
+                console.log(drawnArray[j]);
+            }
         }
     }
 }
@@ -243,7 +251,7 @@ canvas.addEventListener('mousedown', (event) => {
 
     // Store the data untill the mouse is up
     eachStateArray = [];
-    if (currShapeDraw !== 'freeHand') {
+    if (currShapeDraw !== 'pen') {
         console.log("mdwn", currShapeDraw);
         storeDrawn(
             currentPosition.x,
@@ -261,7 +269,7 @@ canvas.addEventListener('mousedown', (event) => {
 // while clicked move to draw
 canvas.addEventListener('mousemove', (event) => {
     // console.log("mmove");
-    if (isMouseDown && currShapeDraw === 'freeHand') {
+    if (isMouseDown && currShapeDraw === 'pen') {
         const currentPosition = getMousePosition(event);
         context.lineTo(currentPosition.x, currentPosition.y);
         context.stroke();
@@ -308,30 +316,41 @@ function selectedShapeDraw(shapeToDraw, x, y, w, h, color) {
             context.stroke();
             break;
         }
+        case 'pen': {
+            context.lineTo(x, y);
+            context.stroke();
+            break;
+        }
         default: console.log('Something Went Wrong! The Chosen Shape Is Not In Option');
     }
 }
 
 // This Function will draw the shapes other than free hand
-function drawShapes() {
-    if (eachStateArray.length < 2) return;
-    let prevPosition = { x: eachStateArray[0].x, y: eachStateArray[0].y };
-    let currPosition = { x: eachStateArray[1].x, y: eachStateArray[1].y };
-    let color = eachStateArray[0].color;
-    let shape = eachStateArray[0].shape;
+function drawShapes(stateArray) {
+    if (stateArray.length < 2) return;
+    let prevPosition = { x: stateArray[0].x, y: stateArray[0].y };
+    let currPosition = { x: stateArray[1].x, y: stateArray[1].y };
+    let color = stateArray[0].color;
+    let shape = stateArray[0].shape;
     let width = (currPosition.x - prevPosition.x);
     let height = (currPosition.y - prevPosition.y);
+    context.lineWidth = stateArray[0].size;
     // Now Sign Of Above H and W plays crucial role because according to which we decide in which direction is made 
     // context.strokeRect(eachStateArray[0].x, eachStateArray[0].y, width, height);
 
     // To set the starting position as it is required 
-    if (shape === 'line')
+    if (shape === 'line' || shape === 'pen')
         context.moveTo(prevPosition.x, prevPosition.y);
 
-    if (!shape.includes('rectangle')) {
-        selectedShapeDraw(shape, currPosition.x, currPosition.y, Math.abs(width), Math.abs(height), color);
-        return;
-    }
+    // if (shape === 'pen'){
+    //     selectedShapeDraw(shape,currPosition.x,currPosition.y,width,height,color);
+    //     return;
+    // }
+
+        if (!shape.includes('rectangle')) {
+            selectedShapeDraw(shape, currPosition.x, currPosition.y, Math.abs(width), Math.abs(height), color);
+            return;
+        }
     if (height > 0 && width > 0) {
         selectedShapeDraw(shape, prevPosition.x, prevPosition.y, width, height, color);
     }
@@ -352,7 +371,7 @@ function drawShapes() {
 // unclicked to stop the drawing
 canvas.addEventListener('mouseup', (event) => {
     // console.log("mend");
-    if (currShapeDraw !== 'freeHand') {
+    if (currShapeDraw !== 'pen') {
         // If the shape is not free hand then 
         console.log('rectangle');
         let currentPosition = getMousePosition(event);
@@ -366,7 +385,7 @@ canvas.addEventListener('mouseup', (event) => {
             currentPosition.w,
             currShapeDraw,
         );
-        drawShapes();
+        drawShapes(eachStateArray);
         drawnArray.push(eachStateArray);
         currentDrawState = drawnArray.length - 1;
     }
@@ -463,7 +482,7 @@ canvas.addEventListener('touchend', (event) => {
             currentPosition.w,
             currShapeDraw,
         );
-        drawShapes();
+        drawShapes(eachStateArray);
         drawnArray.push(eachStateArray);
         currentDrawState = drawnArray.length - 1;
     }
