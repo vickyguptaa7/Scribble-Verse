@@ -43,7 +43,7 @@ diffShapes.addEventListener('click', () => {
 
 allShapesBtn.forEach(shapeBtn => {
     shapeBtn.addEventListener('click', () => {
-        isEraser = false;
+        switchToPen();
         currShapeDraw = shapeBtn.getAttribute('data-value');
         selectedTool.textContent = shapeBtn.getAttribute('data-value');
     })
@@ -347,10 +347,10 @@ function drawShapes(stateArray) {
     //     return;
     // }
 
-        if (!shape.includes('rectangle')) {
-            selectedShapeDraw(shape, currPosition.x, currPosition.y, Math.abs(width), Math.abs(height), color);
-            return;
-        }
+    if (!shape.includes('rectangle')) {
+        selectedShapeDraw(shape, currPosition.x, currPosition.y, Math.abs(width), Math.abs(height), color);
+        return;
+    }
     if (height > 0 && width > 0) {
         selectedShapeDraw(shape, prevPosition.x, prevPosition.y, width, height, color);
     }
