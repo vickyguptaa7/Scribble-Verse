@@ -29,6 +29,7 @@ let currentDrawState = -1;
 let eachStateArray = [];
 let isTouched = false;
 let isPrevUndo = -1;
+let currShapeDraw = 'circle-fill';
 
 // Setting background color
 bucketColor.addEventListener('input', () => {
@@ -140,7 +141,6 @@ function restoreDataDueToResize() {
             drawnArray[i][j].h = newHeight;
             drawnArray[i][j].x *= wratio;
             drawnArray[i][j].y *= hratio;
-            drawnArray[i][j].size *= (hratio + wratio) / 2;
         }
     }
 }
@@ -181,18 +181,6 @@ function restoreCanvas() {
     }
 }
 
-function storeDrawn(x, y, size, color, erase, h, w) {
-    const line = {
-        x, y, size, color, erase, h, w,
-    };
-    // console.log(line);
-    if (drawnArray.length != currentDrawState) {
-        drawnArray = drawnArray.splice(0, currentDrawState + 1);
-    }
-    eachStateArray.push(line);
-}
-
-
 // Clear Canvas
 clearCanvas.addEventListener('click', () => {
     createCanvas();
@@ -201,6 +189,16 @@ clearCanvas.addEventListener('click', () => {
     setTimeout(switchToPen, 1500);
 });
 
+function storeDrawn(x, y, size, color, erase, h, w, shape) {
+    const line = {
+        x, y, size, color, erase, h, w, shape,
+    };
+    // console.log(line);
+    if (drawnArray.length != currentDrawState) {
+        drawnArray = drawnArray.splice(0, currentDrawState + 1);
+    }
+    eachStateArray.push(line);
+}
 
 // Mouse Click
 // Get Mouse Position
@@ -227,12 +225,25 @@ canvas.addEventListener('mousedown', (event) => {
 
     // Store the data untill the mouse is up
     eachStateArray = [];
+    if (currShapeDraw !== 'freeHand') {
+        console.log("mdwn", currShapeDraw);
+        storeDrawn(
+            currentPosition.x,
+            currentPosition.y,
+            currentPenSize,
+            currPenColor,
+            isEraser,
+            currentPosition.h,
+            currentPosition.w,
+            currShapeDraw,
+        )
+    }
 })
 
 // while clicked move to draw
 canvas.addEventListener('mousemove', (event) => {
     // console.log("mmove");
-    if (isMouseDown) {
+    if (isMouseDown && currShapeDraw === 'freeHand') {
         const currentPosition = getMousePosition(event);
         context.lineTo(currentPosition.x, currentPosition.y);
         context.stroke();
@@ -244,15 +255,99 @@ canvas.addEventListener('mousemove', (event) => {
             isEraser,
             currentPosition.h,
             currentPosition.w,
+            currShapeDraw,
         );
     }
 })
 
+function selectedShapeDraw(shapeToDraw, x, y, w, h, color) {
+
+    switch (shapeToDraw) {
+        case 'rectangle-stroke': {
+            context.strokeRect(x, y, w, h);
+            break;
+        }
+        case 'rectangle-fill': {
+            context.fillStyle = color;
+            // console.log(color);
+            context.fillRect(x, y, w, h);
+            break;
+        }
+        case 'circle-stroke': {
+            console.log(color);
+            context.arc(x, y, h, 0, 2 * Math.PI, true);
+            context.stroke();
+            break;
+        }
+        case 'circle-fill': {
+            context.fillStyle = color;
+            context.arc(x, y, Math.max(h, w), 0, 2 * Math.PI, true);
+            context.fill();
+            break;
+        }
+        case 'line': {
+            context.lineTo(x, y);
+            context.stroke();
+            break;
+        }
+        default: console.log('Something Went Wrong! The Chosen Shape Is Not In Option');
+    }
+}
+
+// This Function will draw the shapes other than free hand
+function drawShapes() {
+    if (eachStateArray.length < 2) return;
+    let prevPosition = { x: eachStateArray[0].x, y: eachStateArray[0].y };
+    let currPosition = { x: eachStateArray[1].x, y: eachStateArray[1].y };
+    let color = eachStateArray[0].color;
+    let shape = eachStateArray[0].shape;
+    let width = (currPosition.x - prevPosition.x);
+    let height = (currPosition.y - prevPosition.y);
+    // Now Sign Of Above H and W plays crucial role because according to which we decide in which direction is made 
+    // context.strokeRect(eachStateArray[0].x, eachStateArray[0].y, width, height);
+    if (!shape.includes('rectangle')) {
+        selectedShapeDraw(shape, currPosition.x, currPosition.y, Math.abs(width), Math.abs(height), color);
+        return;
+    }
+    if (height > 0 && width > 0) {
+        selectedShapeDraw(shape, prevPosition.x, prevPosition.y, width, height, color);
+    }
+    else if (height > 0) {
+        selectedShapeDraw(shape, currPosition.x, prevPosition.y, Math.abs(width), height, color);
+        // context.strokeRect(currPosition.x, prevPosition.y, Math.abs(width), height);
+    }
+    else if (width > 0) {
+        selectedShapeDraw(shape, prevPosition.x, currPosition.y, width, Math.abs(height), color);
+        // context.strokeRect(prevPosition.x, currPosition.y, width, Math.abs(height));
+    }
+    else {
+        selectedShapeDraw(shape, currPosition.x, currPosition.y, Math.abs(width), Math.abs(height), color);
+        // context.strokeRect(currPosition.x, currPosition.y, Math.abs(width), Math.abs(height));
+    }
+}
+
 // unclicked to stop the drawing
 canvas.addEventListener('mouseup', (event) => {
     // console.log("mend");
-    if (eachStateArray.length !== 0) {
-
+    if (currShapeDraw !== 'freeHand') {
+        // If the shape is not free hand then 
+        console.log('rectangle');
+        let currentPosition = getMousePosition(event);
+        storeDrawn(
+            currentPosition.x,
+            currentPosition.y,
+            currentPenSize,
+            currPenColor,
+            isEraser,
+            currentPosition.h,
+            currentPosition.w,
+            currShapeDraw,
+        );
+        drawShapes();
+        drawnArray.push(eachStateArray);
+        currentDrawState = drawnArray.length - 1;
+    }
+    else if (eachStateArray.length !== 0) {
         // Avoid Small Bug That When We Get single object for which we cant draw anything so we add one more object
         // One For The Reference of the start from where to start 
         if (eachStateArray.length === 1) {
@@ -274,10 +369,10 @@ function getTouchPosition(event) {
     const boundaries = canvas.getBoundingClientRect();
     // console.log(event.touches[0].screenX, event.touches[0].screenY);
     // console.log(event.touches[0].clientX, event.touches[0].clientY);
-
+    // console.log(event);
     return {
-        x: event.touches[0].clientX - boundaries.left,
-        y: event.touches[0].clientY - boundaries.top,
+        x: event.changedTouches[0].clientX - boundaries.left,
+        y: event.changedTouches[0].clientY - boundaries.top,
         h: boundaries.height,
         w: boundaries.width
     };
@@ -292,14 +387,26 @@ canvas.addEventListener('touchstart', (event) => {
     context.lineWidth = currentPenSize;
     context.lineCap = 'round';
     context.strokeStyle = currPenColor;
-
     // Store the data untill the touch is end
     eachStateArray = [];
+    if (currShapeDraw !== 'freeHand') {
+        // console.log("mdwn", currShapeDraw);
+        storeDrawn(
+            currentPosition.x,
+            currentPosition.y,
+            currentPenSize,
+            currPenColor,
+            isEraser,
+            currentPosition.h,
+            currentPosition.w,
+            currShapeDraw,
+        )
+    }
 })
 
 canvas.addEventListener('touchmove', (event) => {
     // console.log("tmove");
-    if (isTouched) {
+    if (isTouched && currShapeDraw === 'freeHand') {
         const currentPosition = getTouchPosition(event);
         // console.log(currentPosition);
         context.lineTo(currentPosition.x, currentPosition.y);
@@ -312,14 +419,32 @@ canvas.addEventListener('touchmove', (event) => {
             isEraser,
             currentPosition.h,
             currentPosition.w,
+            currShapeDraw,
         );
     }
 })
 
 canvas.addEventListener('touchend', (event) => {
     // console.log("tend");
-    // console.log("mend");
-    if (eachStateArray.length !== 0) {
+    if (currShapeDraw !== 'freeHand') {
+        // If the shape is not free hand then 
+        // console.log('rectangle');
+        let currentPosition = getTouchPosition(event);
+        storeDrawn(
+            currentPosition.x,
+            currentPosition.y,
+            currentPenSize,
+            currPenColor,
+            isEraser,
+            currentPosition.h,
+            currentPosition.w,
+            currShapeDraw,
+        );
+        drawShapes();
+        drawnArray.push(eachStateArray);
+        currentDrawState = drawnArray.length - 1;
+    }
+    else if (eachStateArray.length !== 0) {
 
         // Avoid Small Bug That When We Get single object for which we cant draw anything so we add one more object
         // One For The Reference of the start from where to start 
@@ -376,3 +501,13 @@ saveImage.addEventListener('click', () => {
     selectedTool.textContent = 'Image File Saved';
     setTimeout(switchToPen, 1500);
 })
+
+/*
+Shapes
+
+-> freeHand
+-> circle fill stroke
+-> rectangle fill stroke
+-> line fill stroke
+
+*/ 

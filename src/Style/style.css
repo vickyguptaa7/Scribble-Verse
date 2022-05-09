@@ -46,6 +46,7 @@ canvas#canvas {
   bottom: 25px;
   left: 2%;
   cursor: crosshair;
+  /* cursor: url(https://cdn-icons-png.flaticon.com/32/2607/2607886.png) 0 50,auto; */
   z-index: -1;
   touch-action: none;
   box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
