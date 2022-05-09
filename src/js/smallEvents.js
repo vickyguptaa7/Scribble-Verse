@@ -5,6 +5,7 @@ const penToolsWrapper = document.querySelector('.pen-tools-wrapper');
 const dropMenuBtn = document.querySelector('.drop-menu');
 const dropMenuItemsWrapper = document.querySelector('.drop-menu-items-container');
 
+
 console.log(bucketColorWrapper, bucketSet);
 
 bucketSet.addEventListener('click', () => {
@@ -12,6 +13,7 @@ bucketSet.addEventListener('click', () => {
     bucketColorWrapper.classList.toggle('scale-0');
     bucketColorWrapper.classList.toggle('-translate-x-[100%]');
 })
+
 
 penTools.addEventListener('click', () => {
     penToolsWrapper.classList.toggle('invisible');

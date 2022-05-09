@@ -14,6 +14,9 @@ const deleteStorage = document.querySelector('.delete-storage');
 const undo = document.querySelector('.undo');
 const redo = document.querySelector('.redo');
 const header = document.querySelector('header');
+const diffShapes = document.querySelector('.diff-shapes');
+const diffShapesContainer = document.querySelector('.diff-shapes-container');
+const allShapesBtn = document.querySelectorAll('.shape');
 
 const canvas = document.createElement('canvas');
 canvas.id = 'canvas';
@@ -29,7 +32,22 @@ let currentDrawState = -1;
 let eachStateArray = [];
 let isTouched = false;
 let isPrevUndo = -1;
-let currShapeDraw = 'circle-fill';
+let currShapeDraw = 'freeHand';
+
+// diff shapes
+diffShapes.addEventListener('click', () => {
+    diffShapesContainer.classList.toggle('invisible');
+    diffShapesContainer.classList.toggle('scale-0');
+    diffShapesContainer.classList.toggle('-translate-x-[70%]');
+})
+
+allShapesBtn.forEach(shapeBtn => {
+    shapeBtn.addEventListener('click', () => {
+        isEraser=false;
+        currShapeDraw = shapeBtn.getAttribute('data-value');
+        selectedTool.textContent = shapeBtn.getAttribute('data-value');
+    })
+})
 
 // Setting background color
 bucketColor.addEventListener('input', () => {
@@ -275,7 +293,7 @@ function selectedShapeDraw(shapeToDraw, x, y, w, h, color) {
         }
         case 'circle-stroke': {
             console.log(color);
-            context.arc(x, y, h, 0, 2 * Math.PI, true);
+            context.arc(x, y, Math.max(h, w), 0, 2 * Math.PI, true);
             context.stroke();
             break;
         }
@@ -305,6 +323,11 @@ function drawShapes() {
     let height = (currPosition.y - prevPosition.y);
     // Now Sign Of Above H and W plays crucial role because according to which we decide in which direction is made 
     // context.strokeRect(eachStateArray[0].x, eachStateArray[0].y, width, height);
+
+    // To set the starting position as it is required 
+    if (shape === 'line')
+        context.moveTo(prevPosition.x, prevPosition.y);
+
     if (!shape.includes('rectangle')) {
         selectedShapeDraw(shape, currPosition.x, currPosition.y, Math.abs(width), Math.abs(height), color);
         return;
