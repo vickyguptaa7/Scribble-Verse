@@ -217,7 +217,7 @@ clearCanvas.addEventListener('click', () => {
     setTimeout(switchToPen, 1500);
 });
 
-function storeDrawn(x, y, size, color, erase, h, w, shape) {
+function storeDrawn(x, y, size, color, erase, h, w, shape, StateArray) {
     const line = {
         x, y, size, color, erase, h, w, shape,
     };
@@ -229,7 +229,7 @@ function storeDrawn(x, y, size, color, erase, h, w, shape) {
     if (drawnArray.length !== currentDrawState) {
         drawnArray = drawnArray.splice(0, currentDrawState + 1);
     }
-    eachStateArray.push(line);
+    StateArray.push(line);
 }
 
 // Mouse Click
@@ -269,18 +269,19 @@ canvas.addEventListener('mousedown', (event) => {
             currentPosition.h,
             currentPosition.w,
             currShapeDraw,
+            eachStateArray
         );
-
-        previewStateArray.push({
-            x: currentPosition.x,
-            y: currentPosition.y,
-            size: currentPenSize,
-            color: currPenColor,
-            erase: isEraser,
-            h: currentPosition.h,
-            w: currentPosition.w,
-            shape: currShapeDraw,
-        })
+        storeDrawn(
+            currentPosition.x,
+            currentPosition.y,
+            currentPenSize,
+            currPenColor,
+            isEraser,
+            currentPosition.h,
+            currentPosition.w,
+            currShapeDraw,
+            previewStateArray
+        );
     }
 })
 
@@ -300,21 +301,23 @@ canvas.addEventListener('mousemove', (event) => {
             currentPosition.h,
             currentPosition.w,
             currShapeDraw,
+            eachStateArray
         );
         return;
     }
     if (isMouseDown) {
         const currentPosition = getMousePosition(event);
-        previewStateArray.push({
-            x: currentPosition.x,
-            y: currentPosition.y,
-            size: currentPenSize,
-            color: currPenColor,
-            erase: isEraser,
-            h: currentPosition.h,
-            w: currentPosition.w,
-            shape: currShapeDraw,
-        })
+        storeDrawn(
+            currentPosition.x,
+            currentPosition.y,
+            currentPenSize,
+            currPenColor,
+            isEraser,
+            currentPosition.h,
+            currentPosition.w,
+            currShapeDraw,
+            previewStateArray
+        );
         createCanvas();
         restoreCanvas();
         drawShapes(previewStateArray);
@@ -336,17 +339,20 @@ function selectedShapeDraw(shapeToDraw, x, y, w, h, color) {
         }
         case 'circle-stroke': {
             // console.log(color);
+            context.lineCap = 'round';
             context.arc(x, y, Math.max(h, w), 0, 2 * Math.PI, true);
             context.stroke();
             break;
         }
         case 'circle-fill': {
+            context.lineCap = 'round';
             context.fillStyle = color;
             context.arc(x, y, Math.max(h, w), 0, 2 * Math.PI, true);
             context.fill();
             break;
         }
         case 'line': {
+            context.lineCap = 'round';
             context.lineTo(x, y);
             context.stroke();
             break;
@@ -374,8 +380,10 @@ function drawShapes(stateArray) {
     // context.strokeRect(eachStateArray[0].x, eachStateArray[0].y, width, height);
 
     // To set the starting position as it is required 
-    if (shape === 'line' || shape === 'pen') {
+    if (shape === 'line') {
         context.moveTo(prevPosition.x, prevPosition.y);
+        selectedShapeDraw(shape, currPosition.x, currPosition.y, width, height, color);
+        return;
     }
 
     // if (shape === 'pen'){
@@ -392,6 +400,7 @@ function drawShapes(stateArray) {
         selectedShapeDraw(shape, currPosition.x, currPosition.y, width, height, color);
         return;
     }
+
     if (height > 0 && width > 0) {
         selectedShapeDraw(shape, prevPosition.x, prevPosition.y, width, height, color);
     }
@@ -425,6 +434,7 @@ canvas.addEventListener('mouseup', (event) => {
             currentPosition.h,
             currentPosition.w,
             currShapeDraw,
+            eachStateArray
         );
         drawShapes(eachStateArray);
         drawnArray.push(eachStateArray);
