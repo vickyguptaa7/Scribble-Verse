@@ -252,7 +252,7 @@ canvas.addEventListener('mousedown', (event) => {
     // Store the data untill the mouse is up
     eachStateArray = [];
     if (currShapeDraw !== 'pen') {
-        console.log("mdwn", currShapeDraw);
+        // console.log("mdwn", currShapeDraw);
         storeDrawn(
             currentPosition.x,
             currentPosition.y,
@@ -431,7 +431,7 @@ canvas.addEventListener('touchstart', (event) => {
     context.strokeStyle = currPenColor;
     // Store the data untill the touch is end
     eachStateArray = [];
-    if (currShapeDraw !== 'freeHand') {
+    if (currShapeDraw !== 'pen') {
         // console.log("mdwn", currShapeDraw);
         storeDrawn(
             currentPosition.x,
@@ -447,8 +447,8 @@ canvas.addEventListener('touchstart', (event) => {
 })
 
 canvas.addEventListener('touchmove', (event) => {
-    // console.log("tmove");
-    if (isTouched && currShapeDraw === 'freeHand') {
+    console.log("tmove");
+    if (isTouched && currShapeDraw === 'pen') {
         const currentPosition = getTouchPosition(event);
         // console.log(currentPosition);
         context.lineTo(currentPosition.x, currentPosition.y);
@@ -468,7 +468,7 @@ canvas.addEventListener('touchmove', (event) => {
 
 canvas.addEventListener('touchend', (event) => {
     // console.log("tend");
-    if (currShapeDraw !== 'freeHand') {
+    if (currShapeDraw !== 'pen') {
         // If the shape is not free hand then 
         // console.log('rectangle');
         let currentPosition = getTouchPosition(event);
