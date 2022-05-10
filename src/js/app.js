@@ -219,8 +219,8 @@ function storeDrawn(x, y, size, color, erase, h, w, shape) {
     const line = {
         x, y, size, color, erase, h, w, shape,
     };
-    // console.log(line);
-    if (drawnArray.length != currentDrawState) {
+    // console.log(line); 
+    if (drawnArray.length !== currentDrawState) {
         drawnArray = drawnArray.splice(0, currentDrawState + 1);
     }
     eachStateArray.push(line);
@@ -326,10 +326,10 @@ function selectedShapeDraw(shapeToDraw, x, y, w, h, color) {
 }
 
 // This Function will draw the shapes other than free hand
-function drawShapes(stateArray) {
+function drawShapes(stateArray, isClearPrevShape) {
     if (stateArray.length < 2) return;
     let prevPosition = { x: stateArray[0].x, y: stateArray[0].y };
-    let currPosition = { x: stateArray[1].x, y: stateArray[1].y };
+    let currPosition = { x: stateArray[stateArray.length - 1].x, y: stateArray[stateArray.length - 1].y };
     let color = stateArray[0].color;
     let shape = stateArray[0].shape;
     let width = (currPosition.x - prevPosition.x);
@@ -339,8 +339,9 @@ function drawShapes(stateArray) {
     // context.strokeRect(eachStateArray[0].x, eachStateArray[0].y, width, height);
 
     // To set the starting position as it is required 
-    if (shape === 'line' || shape === 'pen')
+    if (shape === 'line' || shape === 'pen') {
         context.moveTo(prevPosition.x, prevPosition.y);
+    }
 
     // if (shape === 'pen'){
     //     selectedShapeDraw(shape,currPosition.x,currPosition.y,width,height,color);
@@ -447,7 +448,7 @@ canvas.addEventListener('touchstart', (event) => {
 })
 
 canvas.addEventListener('touchmove', (event) => {
-    console.log("tmove");
+    // console.log("tmove");
     if (isTouched && currShapeDraw === 'pen') {
         const currentPosition = getTouchPosition(event);
         // console.log(currentPosition);
