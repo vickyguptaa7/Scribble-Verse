@@ -33,6 +33,7 @@ let eachStateArray = [];
 let isTouched = false;
 let isPrevUndo = -1;
 let currShapeDraw = 'pen';
+let previewStateArray = [];
 
 // diff shapes
 diffShapes.addEventListener('click', () => {
@@ -66,6 +67,7 @@ penColor.addEventListener('input', () => {
 eraser.addEventListener('click', () => {
     selectedTool.textContent = 'Eraser';
     isEraser = true;
+    currShapeDraw = 'pen';
     allTools.forEach(tool => {
         if (tool.classList.contains('selected-icon-style')) {
             tool.classList.remove('selected-icon-style');
@@ -140,7 +142,7 @@ function createCanvas() {
     context.fillStyle = currBucketColor;
     context.fillRect(0, 0, canvas.width, canvas.height);
     forCanvas.appendChild(canvas);
-    switchToPen();
+    // switchToPen();
 }
 
 function restoreDataDueToResize() {
@@ -176,8 +178,8 @@ createCanvas();
 // Draw What is Stored in drawn array
 function restoreCanvas() {
     for (let j = 0; j <= currentDrawState; j++) {
+        if (!drawnArray[j]) continue;
         for (let i = 1; i < drawnArray[j].length; i++) {
-
             if (drawnArray[j][i].shape === 'pen') {
                 context.beginPath();
                 // we first move where we have to start the drawing
@@ -201,7 +203,7 @@ function restoreCanvas() {
                 context.moveTo(drawnArray[j][i - 1].x, drawnArray[j][i - 1].y);
                 context.beginPath();
                 drawShapes(drawnArray[j]);
-                console.log(drawnArray[j]);
+                // console.log(drawnArray[j]);
             }
         }
     }
@@ -220,6 +222,10 @@ function storeDrawn(x, y, size, color, erase, h, w, shape) {
         x, y, size, color, erase, h, w, shape,
     };
     // console.log(line); 
+
+    // this is to avoid the undo's which we have make and then we draw something so we dont that 
+    // undo changes in redo so we remove that changes
+    // this drawnArray Length will be equal to current Draw state Only when we does'nt do any undo's 
     if (drawnArray.length !== currentDrawState) {
         drawnArray = drawnArray.splice(0, currentDrawState + 1);
     }
@@ -253,6 +259,7 @@ canvas.addEventListener('mousedown', (event) => {
     eachStateArray = [];
     if (currShapeDraw !== 'pen') {
         // console.log("mdwn", currShapeDraw);
+        previewStateArray = [];
         storeDrawn(
             currentPosition.x,
             currentPosition.y,
@@ -262,7 +269,18 @@ canvas.addEventListener('mousedown', (event) => {
             currentPosition.h,
             currentPosition.w,
             currShapeDraw,
-        )
+        );
+
+        previewStateArray.push({
+            x: currentPosition.x,
+            y: currentPosition.y,
+            size: currentPenSize,
+            color: currPenColor,
+            erase: isEraser,
+            h: currentPosition.h,
+            w: currentPosition.w,
+            shape: currShapeDraw,
+        })
     }
 })
 
@@ -283,6 +301,23 @@ canvas.addEventListener('mousemove', (event) => {
             currentPosition.w,
             currShapeDraw,
         );
+        return;
+    }
+    if (isMouseDown) {
+        const currentPosition = getMousePosition(event);
+        previewStateArray.push({
+            x: currentPosition.x,
+            y: currentPosition.y,
+            size: currentPenSize,
+            color: currPenColor,
+            erase: isEraser,
+            h: currentPosition.h,
+            w: currentPosition.w,
+            shape: currShapeDraw,
+        })
+        createCanvas();
+        restoreCanvas();
+        drawShapes(previewStateArray);
     }
 })
 
@@ -300,7 +335,7 @@ function selectedShapeDraw(shapeToDraw, x, y, w, h, color) {
             break;
         }
         case 'circle-stroke': {
-            console.log(color);
+            // console.log(color);
             context.arc(x, y, Math.max(h, w), 0, 2 * Math.PI, true);
             context.stroke();
             break;
@@ -326,7 +361,7 @@ function selectedShapeDraw(shapeToDraw, x, y, w, h, color) {
 }
 
 // This Function will draw the shapes other than free hand
-function drawShapes(stateArray, isClearPrevShape) {
+function drawShapes(stateArray) {
     if (stateArray.length < 2) return;
     let prevPosition = { x: stateArray[0].x, y: stateArray[0].y };
     let currPosition = { x: stateArray[stateArray.length - 1].x, y: stateArray[stateArray.length - 1].y };
@@ -348,8 +383,13 @@ function drawShapes(stateArray, isClearPrevShape) {
     //     return;
     // }
 
-    if (!shape.includes('rectangle')) {
-        selectedShapeDraw(shape, currPosition.x, currPosition.y, Math.abs(width), Math.abs(height), color);
+    if (shape.includes('circle')) {
+        width = Math.abs(width);
+        height = Math.abs(height);
+        // This Code is added to remove the circle + line issue which we can face during the making
+        // circle stroke 
+        context.moveTo(currPosition.x + Math.max(height, width), currPosition.y);
+        selectedShapeDraw(shape, currPosition.x, currPosition.y, width, height, color);
         return;
     }
     if (height > 0 && width > 0) {
