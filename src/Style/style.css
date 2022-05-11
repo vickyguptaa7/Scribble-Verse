@@ -43,7 +43,7 @@
 
 canvas#canvas {
   position: absolute;
-  bottom: 25px;
+  bottom: 3%;
   left: 2%;
   cursor: crosshair;
   /* cursor: url(https://cdn-icons-png.flaticon.com/32/2607/2607886.png) 0 50,auto; */

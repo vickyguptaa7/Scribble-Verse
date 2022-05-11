@@ -138,7 +138,7 @@ function switchToPen() {
 // Create Canvas
 function createCanvas() {
     canvas.width = window.innerWidth * (0.95);
-    canvas.height = window.innerHeight - header.offsetHeight - 50;
+    canvas.height = window.innerHeight - header.offsetHeight*(1.7);
     context.fillStyle = currBucketColor;
     context.fillRect(0, 0, canvas.width, canvas.height);
     forCanvas.appendChild(canvas);
@@ -332,6 +332,7 @@ function selectedShapeDraw(shapeToDraw, x, y, w, h, color) {
 
     switch (shapeToDraw) {
         case 'rectangle-stroke': {
+            context.strokeStyle = color;
             context.strokeRect(x, y, w, h);
             break;
         }
@@ -345,6 +346,7 @@ function selectedShapeDraw(shapeToDraw, x, y, w, h, color) {
             // console.log(color);
             context.lineCap = 'round';
             context.arc(x, y, Math.max(h, w), 0, 2 * Math.PI, true);
+            context.strokeStyle = color;
             context.stroke();
             break;
         }
@@ -357,11 +359,7 @@ function selectedShapeDraw(shapeToDraw, x, y, w, h, color) {
         }
         case 'line': {
             context.lineCap = 'round';
-            context.lineTo(x, y);
-            context.stroke();
-            break;
-        }
-        case 'pen': {
+            context.strokeStyle = color;
             context.lineTo(x, y);
             context.stroke();
             break;
