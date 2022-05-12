@@ -54,7 +54,7 @@
 }
 
 .sticky-content {
-  @apply w-full duration-300 ease-in;
+  @apply w-full duration-300 ease-in bg-white;
 }
 
 .sticky-content textarea {

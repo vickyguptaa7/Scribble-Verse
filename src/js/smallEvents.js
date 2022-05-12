@@ -6,6 +6,8 @@ const dropMenuBtn = document.querySelector('.drop-menu');
 const dropMenuItemsWrapper = document.querySelector('.drop-menu-items-container');
 const switchThemeBtn = document.querySelector('.switch-theme');
 const body = document.querySelector('body');
+const toolContainer = document.querySelector('.tools-container');
+const hideUnhideBtn = document.querySelector('.hide-unhide');
 
 console.log(switchThemeBtn);
 
@@ -41,4 +43,11 @@ switchThemeBtn.addEventListener('click', () => {
     body.classList.toggle('darkMode');
     // <!-- <i class="fa-solid fa-moon text-[1.5rem] "></i> -->
     // <i class="fa-solid fa-sun text-[1.5rem]"></i>
+})
+
+hideUnhideBtn.addEventListener('click', () => {
+    toolContainer.classList.toggle('left-[1.5rem]');
+    toolContainer.classList.toggle('left-[-6rem]');
+    hideUnhideBtn.firstElementChild.classList.toggle('fa-angles-left');
+    hideUnhideBtn.firstElementChild.classList.toggle('fa-angles-right');
 })

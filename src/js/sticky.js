@@ -131,7 +131,6 @@ function createNewNotes(noteInfo) {
                 </button>
             </div>
         </div>
-        <hr>
         <div class="sticky-content" style="height: 8rem; padding:0.25rem 0rem;">
             <textarea name="content" class="" value="${noteInfo.content}" placeholder="type here..."></textarea>
         </div>
@@ -151,7 +150,6 @@ function createNewNotes(noteInfo) {
                 </button>
             </div>
         </div>
-        <hr>
         <div class="sticky-content" style="height: 8rem; padding:0.25rem 0rem;">
             <textarea name="content" class="" placeholder="type here..."></textarea>
         </div>
