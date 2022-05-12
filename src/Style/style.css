@@ -6,14 +6,14 @@
 :root {
   --primary-color: #0dbb9e;
   --secondary-color: #ef6356;
-  --primary-text-color: #141f1d;
+  --primary-text-color: #0dbb9e;
   --secondary-text-color: #7d7d7d;
-  --surface-color: #fff;
+  --tertiary-text-color: #141f1d;
   --background-color: #f8fafb;
 }
 
 .header-icons-styles {
-  @apply w-[2.8rem] aspect-square bg-white flex justify-center items-center rounded-full hover:scale-110 duration-300 ease-in-out active:scale-90 cursor-pointer;
+  @apply w-[2.8rem] aspect-square bg-gray-200 flex justify-center items-center rounded-full hover:scale-110 duration-300 ease-in-out active:scale-90 cursor-pointer;
 }
 
 .selected-icon-style {
@@ -37,7 +37,7 @@
 }
 
 .sticky-btns {
-  @apply flex gap-2 text-[color:var(--surface-color)] text-sm;
+  @apply flex gap-2 text-white text-sm;
 }
 
 .minimize-btn {
