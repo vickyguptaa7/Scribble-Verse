@@ -21,7 +21,7 @@
 }
 
 .sticky-wrapper {
-  @apply absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-56 z-10 shadow-sm shadow-gray-400 opacity-95 bg-[color:var(--surface-color)] touch-none duration-300 ease-in-out;
+  @apply absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-56 z-10 shadow-sm shadow-gray-400 opacity-95 bg-[color:var(--surface-color)] touch-none ;
 }
 
 .sticky {

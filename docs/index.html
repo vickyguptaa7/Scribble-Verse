@@ -14,21 +14,21 @@
     
 
     <title>WhiteBoard</title>
-  <script type="module" crossorigin src="assets/index.daab7f1e.js"></script>
-  <link rel="stylesheet" href="assets/index.a4e46f83.css">
+  <script type="module" crossorigin src="assets/index.e9dd284e.js"></script>
+  <link rel="stylesheet" href="assets/index.80106a43.css">
 </head>
 
-<body class="mt-24 bg-slate-200">
+<body class="font-Lexend">
     <header class="fixed top-0 left-0 p-4 w-full bg-white shadow-md shadow-gray-400 border-b-2 border-gray-400 z-20">
 
-        <nav class="flex justify-between w-11/12 m-auto">
+        <nav class="flex justify-between w-11/12 m-auto text-[color:var(--primary-text-color)]">
             <div class="flex  items-center">
                 <div class="text-xl font-bold bg-gray-600 px-4 py-2 rounded-lg">
-                    <h1 class="text-white selected-tools">Pen </h1>
+                    <h1 class=" selected-tools">Pen </h1>
                 </div>
             </div>
 
-            <div class="flex items-center gap-12 text-gray-700 ">
+            <div class="flex items-center gap-12">
 
                 <div class="flex gap-6">
                     <!-- Undo -->
@@ -53,7 +53,7 @@
                     <div
                         class="drop-menu-items-container absolute top-[4rem] -right-1 translate-x-[45%] -translate-y-[70%] scale-0 -z-10 duration-500 ease-in-out">
                         <nav class="bg-gray-50 shadow-lg shadow-gray-500 px-6 py-4 rounded-md">
-                            <div class="flex flex-col gap-8 items-center justify-around text-gray-700 ">
+                            <div class="flex flex-col gap-8 items-center justify-around ">
                                 <!-- save to local storage -->
                                 <button class="save-storage flex" title="save local storage">
                                     <i class="fa-solid fa-download text-[1.5rem]"></i>
@@ -97,42 +97,42 @@
         </nav>
     </header>
     <main
-        class="absolute left-[3%] top-[50%] -translate-y-[40%] bg-gray-50 border-2 border-gray-400 px-4 py-6 rounded-full shadow-md shadow-gray-500 z-20">
-        <div class="tools left flex flex-col gap-[1.6rem]">
+        class="absolute left-[2%] top-[50%] -translate-y-[45%] bg-[color:var(--background-color)] border-2 border-gray-400 px-4 py-6 rounded-full shadow-md shadow-gray-500 z-20">
+        <div class="tools left flex flex-col gap-[1.2rem] text-[color:var(--primary-text-color)]">
             <!-- Pen -->
             <div class="pen-container flex flex-col items-center justify-between">
                 <!-- Icon -->
-                <div class="pen header-icons-styles selected-icon-style" title="pen"><i
+                <button class="pen header-icons-styles selected-icon-style" title="pen"><i
                         class="fa-solid fa-pen-clip text-[1.4rem]"></i>
-                </div>
+                </button>
 
             </div>
 
             <!-- Eraser -->
-            <div class="eraser header-icons-styles" title="eraser">
+            <button class="eraser header-icons-styles" title="eraser">
                 <i class="fa-solid fa-eraser text-[1.5rem]"></i>
-            </div>
+            </button>
 
             <div class=" relative  flex justify-center items-center" title="shapes">
-                <button class="diff-shapes">
+                <button class="diff-shapes header-icons-styles">
                     <i class="fa-solid  fa-shapes text-[1.5rem]"></i>
                 </button>
                 <div
-                    class="absolute diff-shapes-container left-[5rem] px-6 py-3 bg-gray-50 shadow-md shadow-gray-400 rounded-md flex justify-center items-center gap-6 invisible scale-0 -translate-x-[70%] duration-300 ease-in-out -z-10 h-14">
+                    class="absolute diff-shapes-container left-[5rem] px-6 py-3 bg-[color:var(--background-color)] shadow-md shadow-gray-400 rounded-md flex justify-center items-center gap-6 invisible scale-0 -translate-x-[70%] duration-300 ease-in-out -z-10 h-14 text-[color:var(--primary-text-color)] ">
                     <button class="flex items-center shape" data-value="circle-fill" title="circle-fill">
-                        <i class="fa-solid fa-circle text-[1.8rem] text-black"></i>
+                        <i class="fa-solid fa-circle text-[1.8rem] "></i>
                     </button>
                     <button class="flex items-center shape" data-value="circle-stroke" title="circle-stroke">
-                        <i class="fa-solid fa-circle text-[1.3rem] border-4 border-black text-white rounded-full "></i>
+                        <i class="fa-solid fa-circle text-[1.3rem] border-4 border-[color:var(--primary-color)] text-[color:var(--background-color)] rounded-full "></i>
                     </button>
                     <button class="flex items-center shape" data-value="rectangle-fill" title="rectangle-fill">
-                        <i class="fa-solid fa-square  text-[1.8rem] text-black"></i>
+                        <i class="fa-solid fa-square  text-[1.8rem]"></i>
                     </button>
                     <button class="flex items-center shape" data-value="rectangle-stroke" title="rectangle-stroke">
-                        <i class="fa-solid fa-square text-[1rem] border-4 border-black text-white"></i>
+                        <i class="fa-solid fa-square text-[1rem] border-4 border-[color:var(--primary-color)] text-[color:var(--background-color)]"></i>
                     </button>
                     <button class="flex items-center shape" data-value="line" title="line">
-                        <i class="fa-solid fa-lines-leaning text-[1.5rem] text-black"></i>
+                        <i class="fa-solid fa-lines-leaning text-[1.5rem] "></i>
                     </button>
                 </div>
             </div>
@@ -140,17 +140,17 @@
             <div class="h-[0.2rem] bg-gray-500 rounded-full"></div>
 
             <!-- Pen Tools -->
-            <div class="relative  text-black flex justify-center items-center">
+            <div class="relative  text-[color:var(--primary-text-color)] flex justify-center items-center">
                 <div class="pen-tool header-icons-styles">
                     <i class="fa-solid fa-pen-ruler text-[1.5rem]"></i>
                 </div>
-                <div class="absolute pen-tools-wrapper left-[5rem] -top-3 px-6 py-3 bg-gray-50 shadow-md shadow-gray-400 rounded-md flex  gap-6
+                <div class="absolute pen-tools-wrapper left-[5rem] -top-3 px-6 py-3 bg-[color:var(--background-color)] shadow-md shadow-gray-400 rounded-md flex  gap-6
                 invisible scale-0 -translate-x-[70%] duration-300 ease-in-out -z-10 h-14">
                     <!-- Color Selector -->
-                    <div class="pen-color w-[2rem] aspect-square rounded-full overflow-hidden relative border-4 border-gray-500"
+                    <div class="pen-color w-[2rem] aspect-square rounded-full overflow-hidden relative border-4 border-[color:var(--primary-color)]"
                         title=" color selector">
                         <input type="color" id="head" name="head" value="#000000"
-                            class="h-16 aspect-square absolute top-[-1rem] left-[-1rem]">
+                            class="h-16 aspect-square absolute top-[-1rem] left-[-1rem] cursor-pointer">
                     </div>
 
                     <!-- Pen Width -->
@@ -167,12 +167,12 @@
                 </div>
 
                 <div
-                    class="bucket-color-wrapper absolute bg-gray-50 left-[5rem] px-6 py-3 rounded-md shadow-md shadow-gray-400 invisible scale-0 -translate-x-[100%] duration-300 ease-in-out -z-10 h-14">
+                    class="bucket-color-wrapper absolute bg-[color:var(--background-color)] left-[5rem] px-6 py-3 rounded-md shadow-md shadow-gray-400 invisible scale-0 -translate-x-[100%] duration-300 ease-in-out -z-10 h-14">
                     <!-- Color selector -->
-                    <div class="bucket-color w-[2rem] aspect-square rounded-full overflow-hidden relative border-4 border-gray-500"
+                    <div class="bucket-color w-[2rem] aspect-square rounded-full overflow-hidden relative border-4 border-[color:var(--primary-color)]"
                         title=" color selector">
                         <input type="color" id="head" name="head" value="#ffffff"
-                            class="h-16 aspect-square absolute top-[-1rem] left-[-1rem]">
+                            class="h-16 aspect-square absolute top-[-1rem] left-[-1rem] cursor-pointer">
                     </div>
                 </div>
             </div>
@@ -184,32 +184,7 @@
         </div>
     </main>
     <div class="for-canvas">
-        <div class="sticky-container flex relative">
-            <div class="sticky-wrapper absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 w-56 z-10 shadow-sm shadow-gray-400 opacity-95 bg-white touch-none"
-                draggable="false">
-                <div class="sticky flex flex-col w-full border-b-2 border-gray-500">
-                    <div class="sticky-top flex justify-between items-center p-1 border-y-2 border-gray-500">
-                        <input type="text" value=""
-                            class="text-xl bg-transparent text-gray-700 font-semibold outline-none border-2 border-transparent focus:bg-gray-100 w-20"
-                            placeholder="Note...">
-                        <div class=" flex gap-2">
-                            <button
-                                class="minimize-btn w-5 aspect-square bg-black rounded-full flex justify-center items-center">
-                                <i class="fa-solid text-sm fa-minus text-white"></i>
-                            </button>
-                            <button
-                                class="remove-btn w-5 aspect-square bg-black rounded-full flex justify-center items-center">
-                                <i class="fa-solid fa-xmark text-xs text-white"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="sticky-content w-full h-full">
-                        <textarea name="content" class="h-full w-full outline-none resize-none px-2 py-1 text-gray-500"
-                            placeholder="type here ..."></textarea>
-                    </div>
-                </div>
-            </div>
-
+        <div class="sticky-container flex">
         </div>
     </div>
 
