@@ -1,6 +1,9 @@
 const canvasContainer = document.querySelector('canvas');
 const stickyContainer = document.querySelector('.sticky-container');
 const addNotesBtn = document.querySelector('.add-notes');
+const saveStorage = document.querySelector('.save-storage');
+const loadStorage = document.querySelector('.load-storage');
+const deleteStorage = document.querySelector('.delete-storage');
 
 let posX = 0, posY = 0;
 let isMouseDown = [];
@@ -104,14 +107,38 @@ function addMinimizeListner(btn) {
 
 addNotesBtn.addEventListener('click', createNewNotes);
 
-function createNewNotes() {
+function createNewNotes(noteInfo) {
     noOfNotes++;
     isMouseDown.push(false);
     isTouched.push(false);
     let stickyNote = document.createElement('div');
     stickyNote.classList.add('sticky-wrapper');
     stickyNote.setAttribute('data-no', `${noOfNotes - 1}`);
-    stickyNote.innerHTML = `
+    if (noteInfo.heading !== undefined) {
+        console.log(noteInfo.heading === undefined);
+        stickyNote.style.top = noteInfo.top + 'px';
+        stickyNote.style.left = noteInfo.left + 'px';
+        stickyNote.innerHTML = `
+    <div class="sticky">
+        <div class="sticky-top ">
+            <input type="text" value="${noteInfo.heading}" class="sticky-heading" placeholder="Note...">
+            <div class="sticky-btns">
+                <button class="minimize-btn " title="minimize">
+                    <i class="fa-solid fa-minus "></i>
+                </button>
+                <button class="remove-btn " title="remove">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+        <hr>
+        <div class="sticky-content" style="height: 8rem; padding:0.25rem 0rem;">
+            <textarea name="content" class="" value="${noteInfo.content}" placeholder="type here..."></textarea>
+        </div>
+    </div>`;
+    }
+    else {
+        stickyNote.innerHTML = `
     <div class="sticky">
         <div class="sticky-top ">
             <input type="text" value="" class="sticky-heading" placeholder="Note...">
@@ -129,6 +156,7 @@ function createNewNotes() {
             <textarea name="content" class="" placeholder="type here..."></textarea>
         </div>
     </div>`;
+    }
 
     stickyContainer.appendChild(stickyNote);
     addMoveWithMouseListner(stickyNote);
@@ -136,3 +164,35 @@ function createNewNotes() {
     addRemoveListner(stickyNote.querySelector('.remove-btn'));
     addMinimizeListner(stickyNote.querySelector('.minimize-btn'));
 }
+
+function saveAllNotes() {
+    let allNotes = document.querySelectorAll('.sticky-wrapper');
+    let notesArray = [];
+    allNotes.forEach(note => {
+        let noteInfo = {
+            heading: note.querySelector('.sticky-heading').value,
+            content: note.querySelector('textarea').value,
+            top: note.offsetTop,
+            left: note.offsetLeft,
+        };
+        notesArray.push(noteInfo);
+    });
+    localStorage.setItem('saveStickyNotes', JSON.stringify(notesArray));
+}
+
+function loadAllNotes() {
+    console.log('in');
+    if (localStorage.getItem('saveStickyNotes')) {
+        let notesArray = JSON.parse(localStorage.saveStickyNotes);
+        notesArray.forEach(note => {
+            createNewNotes(note);
+        });
+    }
+}
+
+saveStorage.addEventListener('click', saveAllNotes);
+loadStorage.addEventListener('click', loadAllNotes);
+deleteStorage.addEventListener('click', () => {
+    localStorage.removeItem('saveStickyNotes');
+});
+
