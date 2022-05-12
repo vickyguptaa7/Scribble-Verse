@@ -51,6 +51,7 @@ allShapesBtn.forEach(shapeBtn => {
         })
         diffShapes.classList.add('selected-icon-style');
         isEraser = false;
+        canvas.style.cursor = 'crosshair';
         currentPenSize = 10;
         currPenColor = penColor.firstElementChild.value;
         currShapeDraw = shapeBtn.getAttribute('data-value');
@@ -75,6 +76,7 @@ penColor.addEventListener('input', () => {
 eraser.addEventListener('click', () => {
     selectedTool.textContent = 'Eraser';
     isEraser = true;
+    canvas.style.cursor = 'url(./src/Img/eraser.png) 12 25, auto';
     currShapeDraw = 'pen';
     allTools.forEach(tool => {
         if (tool.classList.contains('selected-icon-style')) {
@@ -83,7 +85,7 @@ eraser.addEventListener('click', () => {
     })
     eraser.classList.add('selected-icon-style');
     currPenColor = currBucketColor;
-    currentPenSize = 50;
+    currentPenSize = 20;
     penWidth.firstElementChild.value = currentPenSize;
 });
 
@@ -129,6 +131,7 @@ function switchToPen() {
     currShapeDraw = 'pen';
     isEraser = false;
     selectedTool.textContent = 'Pen';
+    canvas.style.cursor = 'url(./src/Img/Pen.png) 0 60,auto';
     currPenColor = penColor.firstElementChild.value;
     currentPenSize = 10;
     allTools.forEach(tool => {
@@ -182,6 +185,7 @@ window.addEventListener('resize', () => {
 });
 
 createCanvas();
+switchToPen();
 
 // Draw What is Stored in drawn array
 function restoreCanvas() {

@@ -14,45 +14,53 @@
     
 
     <title>WhiteBoard</title>
-  <script type="module" crossorigin src="assets/index.e9dd284e.js"></script>
-  <link rel="stylesheet" href="assets/index.80106a43.css">
+  <script type="module" crossorigin src="assets/index.acb4abd2.js"></script>
+  <link rel="stylesheet" href="assets/index.397a5f88.css">
 </head>
 
-<body class="font-Lexend">
-    <header class="fixed top-0 left-0 p-4 w-full bg-white shadow-md shadow-gray-400 border-b-2 border-gray-400 z-20">
+<body class="font-Lexend ">
+    <header
+        class="fixed top-0 left-0 p-4 w-full bg-[color:var(--background-color)] shadow-md shadow-gray-400 border-b-2 border-gray-300 z-20">
 
         <nav class="flex justify-between w-11/12 m-auto text-[color:var(--primary-text-color)]">
             <div class="flex  items-center">
-                <div class="text-xl font-bold bg-gray-600 px-4 py-2 rounded-lg">
+                <div class="text-xl font-bold bg-gray-300 px-4 py-2 rounded-lg">
                     <h1 class=" selected-tools">Pen </h1>
                 </div>
             </div>
 
-            <div class="flex items-center gap-12">
+            <div class="flex ml-6 items-center gap-12 text-[color:var(--tertiary-text-color)]">
 
                 <div class="flex gap-6">
                     <!-- Undo -->
-                    <button class="undo ">
-                        <i class="fa-solid fa-rotate-left text-[1.5rem]"></i>
+                    <button class="undo duration-300 ease-in-out focus:-rotate-180 hover:scale-110">
+                        <i class="fa-solid fa-rotate-left text-[1.5rem] "></i>
                     </button>
 
                     <!-- Redo -->
-                    <button class="redo ">
+                    <button class="redo duration-300 ease-in-out focus:rotate-180 hover:scale-110">
                         <i class="fa-solid fa-rotate-right text-[1.5rem]"></i>
                     </button>
                 </div>
 
                 <!-- Clear -->
-                <button class="clear " title="clear">
-                    <i class="fa-solid fa-xmark text-[1.8rem]"></i>
+                <button class="clear hover:scale-110 active:scale-95 duration-300 ease-in-out" title="clear">
+                    <i class="fa-solid fa-xmark text-[1.8rem] text-[color:var(--secondary-color)]"></i>
                 </button>
-                <div class="relative">
+
+                <!-- Button For Theme Change -->
+                <button class=" hover:scale-110 duration-500 ease-in-out text-[color:var(--primary-color)]">
+                    <!-- <i class="fa-solid fa-moon text-[1.5rem] "></i> -->
+                    <i class="fa-solid fa-sun text-[1.5rem]"></i>
+                </button>
+
+                <div class="relative text-[color:var(--primary-text-color)]">
                     <button class="drop-menu">
                         <i class="fa-solid fa-bars  text-[1.5rem] duration-500 ease-in-out"></i>
                     </button>
                     <div
-                        class="drop-menu-items-container absolute top-[4rem] -right-1 translate-x-[45%] -translate-y-[70%] scale-0 -z-10 duration-500 ease-in-out">
-                        <nav class="bg-gray-50 shadow-lg shadow-gray-500 px-6 py-4 rounded-md">
+                        class="drop-menu-items-container absolute top-[4rem] -right-1 translate-x-[45%] -translate-y-[70%] scale-0 -z-10 duration-500 ease-in-out ">
+                        <nav class="bg-[color:var(--background-color)] shadow-lg shadow-gray-500 px-6 py-4 rounded-md">
                             <div class="flex flex-col gap-8 items-center justify-around ">
                                 <!-- save to local storage -->
                                 <button class="save-storage flex" title="save local storage">
@@ -123,13 +131,15 @@
                         <i class="fa-solid fa-circle text-[1.8rem] "></i>
                     </button>
                     <button class="flex items-center shape" data-value="circle-stroke" title="circle-stroke">
-                        <i class="fa-solid fa-circle text-[1.3rem] border-4 border-[color:var(--primary-color)] text-[color:var(--background-color)] rounded-full "></i>
+                        <i
+                            class="fa-solid fa-circle text-[1.3rem] border-4 border-[color:var(--primary-color)] text-[color:var(--background-color)] rounded-full "></i>
                     </button>
                     <button class="flex items-center shape" data-value="rectangle-fill" title="rectangle-fill">
                         <i class="fa-solid fa-square  text-[1.8rem]"></i>
                     </button>
                     <button class="flex items-center shape" data-value="rectangle-stroke" title="rectangle-stroke">
-                        <i class="fa-solid fa-square text-[1rem] border-4 border-[color:var(--primary-color)] text-[color:var(--background-color)]"></i>
+                        <i
+                            class="fa-solid fa-square text-[1rem] border-4 border-[color:var(--primary-color)] text-[color:var(--background-color)]"></i>
                     </button>
                     <button class="flex items-center shape" data-value="line" title="line">
                         <i class="fa-solid fa-lines-leaning text-[1.5rem] "></i>

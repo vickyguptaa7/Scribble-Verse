@@ -88,8 +88,9 @@
 
 canvas#canvas {
   position: absolute;
-  cursor: crosshair;
-  /* cursor: url(https://cdn-icons-png.flaticon.com/32/2607/2607886.png) 0 50,auto; */
+  /* cursor: crosshair; */
+  /* cursor: url(../Img/Pen.png) 0 60,auto; */
+  /* cursor: url(../Img/eraser.png) 12 25,auto; */
   z-index: -1;
   touch-action: none;
   top: 0;
