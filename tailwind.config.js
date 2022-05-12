@@ -3,7 +3,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily:{
-        Nunito:['Roboto Mono', 'monospace']
+        Lexend:['Lexend', 'sans-serif']
       }
     },
   },

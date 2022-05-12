@@ -1,14 +1,59 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --primary-color: #0dbb9e;
+  --secondary-color: #ef6356;
+  --primary-text-color: #141f1d;
+  --secondary-text-color: #7d7d7d;
+  --surface-color: #fff;
+  --background-color: #ededf3;
+}
 
 .header-icons-styles {
   @apply w-[2.8rem] aspect-square bg-white flex justify-center items-center rounded-full hover:bg-gray-200 duration-300 ease-in-out active:scale-90 cursor-pointer;
 }
 
 .selected-icon-style {
-  @apply text-white bg-gray-700;
+  @apply text-white bg-[color:var(--primary-color)];
+}
+
+.sticky-wrapper {
+  @apply absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-56 z-10 shadow-sm shadow-gray-400 opacity-95 bg-[color:var(--surface-color)] touch-none;
+}
+
+.sticky {
+  @apply flex flex-col w-full;
+}
+
+.sticky-top {
+  @apply flex justify-between items-center p-1 bg-gray-100;
+}
+
+.sticky-heading {
+  @apply text-xl bg-transparent text-[color:var(--primary-text-color)] font-semibold outline-none focus:bg-gray-200 w-36;
+}
+
+.sticky-btns {
+  @apply flex gap-2 text-[color:var(--surface-color)] text-sm;
+}
+
+.minimize-btn {
+  @apply w-5 aspect-square bg-[color:var(--primary-color)] rounded-full flex justify-center items-center;
+}
+
+.remove-btn {
+  @apply w-5 aspect-square bg-[color:var(--secondary-color)] rounded-full flex justify-center items-center;
+}
+
+.sticky-content {
+  @apply w-full duration-300 ease-in;
+}
+
+.sticky-content textarea {
+  @apply h-full w-full outline-none resize-none px-2 text-[color:var(--secondary-text-color)];
 }
 
 .slider {
@@ -43,15 +88,12 @@
 
 canvas#canvas {
   position: absolute;
-  bottom: 3%;
-  left: 2%;
   cursor: crosshair;
   /* cursor: url(https://cdn-icons-png.flaticon.com/32/2607/2607886.png) 0 50,auto; */
   z-index: -1;
   touch-action: none;
-  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
-  border: 2px solid rgb(192, 192, 192);
+  top: 0;
+  left: 0;
 }
 html {
   -webkit-tap-highlight-color: transparent;
