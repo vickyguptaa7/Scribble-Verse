@@ -9,11 +9,11 @@
   --primary-text-color: #141f1d;
   --secondary-text-color: #7d7d7d;
   --surface-color: #fff;
-  --background-color: #ededf3;
+  --background-color: #f8fafb;
 }
 
 .header-icons-styles {
-  @apply w-[2.8rem] aspect-square bg-white flex justify-center items-center rounded-full hover:bg-gray-200 duration-300 ease-in-out active:scale-90 cursor-pointer;
+  @apply w-[2.8rem] aspect-square bg-white flex justify-center items-center rounded-full hover:scale-110 duration-300 ease-in-out active:scale-90 cursor-pointer;
 }
 
 .selected-icon-style {
@@ -21,7 +21,7 @@
 }
 
 .sticky-wrapper {
-  @apply absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-56 z-10 shadow-sm shadow-gray-400 opacity-95 bg-[color:var(--surface-color)] touch-none;
+  @apply absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-56 z-10 shadow-sm shadow-gray-400 opacity-95 bg-[color:var(--surface-color)] touch-none duration-300 ease-in-out;
 }
 
 .sticky {
@@ -74,7 +74,7 @@
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background: #2c2c2c;
+  background: var(--primary-color);
   cursor: pointer;
 }
 

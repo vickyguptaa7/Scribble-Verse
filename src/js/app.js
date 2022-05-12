@@ -44,7 +44,15 @@ diffShapes.addEventListener('click', () => {
 
 allShapesBtn.forEach(shapeBtn => {
     shapeBtn.addEventListener('click', () => {
-        switchToPen();
+        allTools.forEach(tool => {
+            if (tool.classList.contains('selected-icon-style')) {
+                tool.classList.remove('selected-icon-style');
+            }
+        })
+        diffShapes.classList.add('selected-icon-style');
+        isEraser = false;
+        currentPenSize = 10;
+        currPenColor = penColor.firstElementChild.value;
         currShapeDraw = shapeBtn.getAttribute('data-value');
         selectedTool.textContent = shapeBtn.getAttribute('data-value');
     })
