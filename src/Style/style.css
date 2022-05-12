@@ -12,6 +12,11 @@
   --background-color: #f8fafb;
 }
 
+.darkMode{
+  --tertiary-text-color: #f8fafb;
+  --background-color: #121212;
+}
+
 .header-icons-styles {
   @apply w-[2.8rem] aspect-square bg-gray-200 flex justify-center items-center rounded-full hover:scale-110 duration-300 ease-in-out active:scale-90 cursor-pointer;
 }
