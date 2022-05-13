@@ -93,7 +93,6 @@ function addRemoveListner(btn) {
 function addMinimizeListner(btn) {
     btn.addEventListener('click', () => {
         let targetElement = btn.parentElement.parentElement.parentElement.lastElementChild;
-        console.log(targetElement.style.height);
         if (targetElement.style.height == "8rem") {
             targetElement.style.height = '0rem';
             targetElement.style.padding = '0rem';
@@ -115,10 +114,8 @@ function createNewNotes(noteInfo) {
     stickyNote.classList.add('sticky-wrapper');
     stickyNote.setAttribute('data-no', `${noOfNotes - 1}`);
     if (noteInfo.heading !== undefined) {
-        console.log(noteInfo.heading === undefined);
         stickyNote.style.top = noteInfo.top + 'px';
         stickyNote.style.left = noteInfo.left + 'px';
-        console.log(noteInfo.content);
         stickyNote.innerHTML = `
     <div class="sticky">
         <div class="sticky-top ">
@@ -180,7 +177,6 @@ function saveAllNotes() {
 }
 
 function loadAllNotes() {
-    console.log('in');
     if (localStorage.getItem('saveStickyNotes')) {
         let notesArray = JSON.parse(localStorage.saveStickyNotes);
         notesArray.forEach(note => {

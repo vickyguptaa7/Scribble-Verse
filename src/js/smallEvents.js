@@ -18,10 +18,6 @@ else if (isDarkMode === 'true')
 else
     isDarkMode = false;
 
-console.log(switchThemeBtn);
-
-console.log(bucketColorWrapper, bucketSet);
-
 bucketSet.addEventListener('click', () => {
     bucketColorWrapper.classList.toggle('invisible');
     bucketColorWrapper.classList.toggle('scale-0');

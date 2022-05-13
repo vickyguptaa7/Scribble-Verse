@@ -110,7 +110,6 @@ window.document.addEventListener('keydown', (event) => {
     z key -> 90
     y key -> 89
     */
-    console.log(event.metaKey && event.shiftKey && event.key === 'z');
     if ((event.metaKey && event.shiftKey && event.key === 'z') || (event.ctrlKey && event.key === 'y')) {
         redoOperations();
     }
