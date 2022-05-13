@@ -118,6 +118,7 @@ function createNewNotes(noteInfo) {
         console.log(noteInfo.heading === undefined);
         stickyNote.style.top = noteInfo.top + 'px';
         stickyNote.style.left = noteInfo.left + 'px';
+        console.log(noteInfo.content);
         stickyNote.innerHTML = `
     <div class="sticky">
         <div class="sticky-top ">
@@ -132,7 +133,7 @@ function createNewNotes(noteInfo) {
             </div>
         </div>
         <div class="sticky-content" style="height: 8rem; padding:0.25rem 0rem;">
-            <textarea name="content" class="" value="${noteInfo.content}" placeholder="type here..."></textarea>
+            <textarea name="content" class="" placeholder="type here...">${noteInfo.content}</textarea>
         </div>
     </div>`;
     }
@@ -151,7 +152,7 @@ function createNewNotes(noteInfo) {
             </div>
         </div>
         <div class="sticky-content" style="height: 8rem; padding:0.25rem 0rem;">
-            <textarea name="content" class="" placeholder="type here..."></textarea>
+            <textarea name="content" class=""  placeholder="type here..."></textarea>
         </div>
     </div>`;
     }
