@@ -9,6 +9,15 @@ const body = document.querySelector('body');
 const toolContainer = document.querySelector('.tools-container');
 const hideUnhideBtn = document.querySelector('.hide-unhide');
 
+let isDarkMode = localStorage.getItem('isDarkMode');
+
+if (isDarkMode === null)
+    isDarkMode = false;
+else if (isDarkMode === 'true')
+    isDarkMode = true;
+else
+    isDarkMode = false;
+
 console.log(switchThemeBtn);
 
 console.log(bucketColorWrapper, bucketSet);
@@ -33,17 +42,22 @@ dropMenuBtn.addEventListener('click', () => {
     dropMenuItemsWrapper.classList.toggle('scale-0');
 })
 
-switchThemeBtn.addEventListener('click', () => {
+switchThemeBtn.addEventListener('click', switchTheme)
+function switchTheme() {
     if (switchThemeBtn.firstElementChild.classList.contains('fa-moon')) {
         switchThemeBtn.innerHTML = `<i class="fa-solid fa-sun text-[1.5rem]"></i>`;
+        isDarkMode = false;
     }
     else {
-        switchThemeBtn.innerHTML = `<i class="fa-solid fa-moon text-[1.5rem] "></i>`;
+        isDarkMode = true;
+        switchThemeBtn.innerHTML = `<i class="fa-solid fa-moon text-[1.5rem]"></i>`;
     }
+
+    localStorage.setItem('isDarkMode', isDarkMode);
     body.classList.toggle('darkMode');
     // <!-- <i class="fa-solid fa-moon text-[1.5rem] "></i> -->
     // <i class="fa-solid fa-sun text-[1.5rem]"></i>
-})
+}
 
 hideUnhideBtn.addEventListener('click', () => {
     toolContainer.classList.toggle('left-[1.5rem]');
@@ -51,3 +65,9 @@ hideUnhideBtn.addEventListener('click', () => {
     hideUnhideBtn.firstElementChild.classList.toggle('fa-angles-left');
     hideUnhideBtn.firstElementChild.classList.toggle('fa-angles-right');
 })
+
+if (isDarkMode == true) {
+    switchTheme();
+    isDarkMode = true;
+    localStorage.setItem('isDarkMode', isDarkMode);
+}
