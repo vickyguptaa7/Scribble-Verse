@@ -45,12 +45,12 @@ dropMenuBtn.addEventListener('click', () => {
 switchThemeBtn.addEventListener('click', switchTheme)
 function switchTheme() {
     if (switchThemeBtn.firstElementChild.classList.contains('fa-moon')) {
-        switchThemeBtn.innerHTML = `<i class="fa-solid fa-sun text-[1.5rem]"></i>`;
+        switchThemeBtn.firstElementChild.classList.replace('fa-moon', 'fa-sun');
         isDarkMode = false;
     }
     else {
         isDarkMode = true;
-        switchThemeBtn.innerHTML = `<i class="fa-solid fa-moon text-[1.5rem]"></i>`;
+        switchThemeBtn.firstElementChild.classList.replace('fa-sun', 'fa-moon');
     }
 
     localStorage.setItem('isDarkMode', isDarkMode);

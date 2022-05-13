@@ -101,6 +101,23 @@ undo.addEventListener('click', undoOperation)
 
 redo.addEventListener('click', redoOperations)
 
+// From Keybaord
+window.document.addEventListener('keydown', (event) => {
+    /*
+    cmd key -> 91
+    cntrol key -> 17
+    shift key -> 16
+    z key -> 90
+    y key -> 89
+    */
+    console.log(event.metaKey && event.shiftKey && event.key === 'z');
+    if ((event.metaKey && event.shiftKey && event.key === 'z') || (event.ctrlKey && event.key === 'y')) {
+        redoOperations();
+    }
+    else if ((event.ctrlKey && event.key === 'z') || (event.metaKey && event.key === 'z')) {
+        undoOperation();
+    }
+})
 
 // Undo Functions
 function undoOperation() {

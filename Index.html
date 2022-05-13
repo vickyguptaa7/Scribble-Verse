@@ -31,12 +31,12 @@
 
                 <div class="flex gap-6">
                     <!-- Undo -->
-                    <button class="undo duration-300 ease-in-out focus:-rotate-180 hover:scale-110">
+                    <button class="undo duration-300 ease-in-out active:-rotate-180 hover:scale-110">
                         <i class="fa-solid fa-rotate-left text-[1.5rem] "></i>
                     </button>
 
                     <!-- Redo -->
-                    <button class="redo duration-300 ease-in-out focus:rotate-180 hover:scale-110">
+                    <button class="redo duration-300 ease-in-out active:rotate-180 hover:scale-110">
                         <i class="fa-solid fa-rotate-right text-[1.5rem]"></i>
                     </button>
                 </div>
@@ -48,8 +48,7 @@
 
                 <!-- Button For Theme Change -->
                 <button class="switch-theme  hover:scale-110 duration-500 ease-in-out text-[color:var(--primary-color)]">
-                    <!-- <i class="fa-solid fa-moon text-[1.5rem] "></i> -->
-                    <i class="fa-solid fa-sun text-[1.5rem]"></i>
+                    <i class="fa-solid fa-sun text-[1.5rem] duration-300 ease-in-out"></i>
                 </button>
 
                 <div class="relative ">
@@ -61,7 +60,7 @@
                         <nav class="bg-[color:var(--background-color)] shadow-lg shadow-gray-500 px-6 py-4 rounded-md duration-300 ease-in-out">
                             <div class="flex flex-col gap-8 items-center justify-around ">
                                 <!-- save to local storage -->
-                                <button class="save-storage flex" title="save local storage">
+                                <button class="save-storage flex " title="save local storage">
                                     <i class="fa-solid fa-download text-[1.5rem]"></i>
                                     <h1 class="ml-1 text-[1.2rem] font-bold hidden sm:block">
                                         Save
