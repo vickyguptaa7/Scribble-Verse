@@ -1,7 +1,7 @@
 {
-  "name": "WhiteBoard",
+  "name": "progress_steps",
   "version": "1.0.0",
-  "description": "WhiteBoard App provide drawing tool and Sticky Notes",
+  "description": "WhiteBoard App",
   "main": "index.js",
   "scripts": {
     "start": "vite",
