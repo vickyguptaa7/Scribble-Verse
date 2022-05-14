@@ -1,3 +1,6 @@
+import cursorPenImg from "../Img/pen.png";
+import cursorEraserImg from "../Img/eraser.png";
+
 const forCanvas = document.querySelector('.for-canvas');
 const pen = document.querySelector('.pen');
 const penColor = document.querySelector('.pen-color');
@@ -17,6 +20,8 @@ const header = document.querySelector('header');
 const diffShapes = document.querySelector('.diff-shapes');
 const diffShapesContainer = document.querySelector('.diff-shapes-container');
 const allShapesBtn = document.querySelectorAll('.shape');
+
+
 
 const canvas = document.createElement('canvas');
 canvas.id = 'canvas';
@@ -94,7 +99,7 @@ penColor.addEventListener('input', () => {
 eraser.addEventListener('click', () => {
     showMessage('Eraser');
     isEraser = true;
-    canvas.style.cursor = 'url(./src/Img/eraser.png) 12 25, auto';
+    canvas.style.cursor = `url(${cursorEraserImg}) 12 25, auto`;
     currShapeDraw = 'pen';
     removeHighlightedTool();
     eraser.classList.add('selected-icon-style');
@@ -164,7 +169,7 @@ function switchToPen() {
     currShapeDraw = 'pen';
     isEraser = false;
     showMessage('pen');
-    canvas.style.cursor = 'url(./src/Img/Pen.png) 0 60,auto';
+    canvas.style.cursor = `url(${cursorPenImg}) 0 60,auto`;
     currPenColor = penColor.firstElementChild.value;
     currentPenSize = 10;
     removeHighlightedTool();

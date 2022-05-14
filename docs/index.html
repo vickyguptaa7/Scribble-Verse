@@ -8,23 +8,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
         integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-
+    
+    
+    
+    
 
     <title>WhiteBoard</title>
-    <script type="module" crossorigin src="assets/index.acb4abd2.js"></script>
-    <link rel="stylesheet" href="assets/index.397a5f88.css">
+  <script type="module" crossorigin src="assets/index.05244a73.js"></script>
+  <link rel="stylesheet" href="assets/index.e0fb990b.css">
 </head>
 
-<body class="font-Lexend ">
-    <header
-        class="fixed top-0 left-0 p-4 w-full bg-[color:var(--background-color)] shadow-md shadow-gray-400 border-b-2 border-gray-300 z-20">
+<body class="font-Lexend">
 
+    <!-- Header -->
+    <header
+        class="absolute top-0 left-0 p-4 w-full min-w-max bg-[color:var(--background-color)] shadow-md shadow-gray-400 border-b-2 border-gray-300 z-20 duration-300 ease-in-out">
+
+        <!-- Navbar -->
         <nav class="flex justify-between w-11/12 m-auto text-[color:var(--primary-text-color)]">
+
+            <!-- Selected Tools Details -->
             <div class="flex  items-center">
-                <div class="text-xl font-bold bg-gray-300 px-4 py-2 rounded-lg">
+                <div class="text-xl font-bold bg-gray-300 px-2 py-1 rounded-md">
                     <h1 class=" selected-tools">Pen </h1>
                 </div>
             </div>
@@ -33,12 +38,12 @@
 
                 <div class="flex gap-6">
                     <!-- Undo -->
-                    <button class="undo duration-300 ease-in-out focus:-rotate-180 hover:scale-110">
+                    <button class="undo duration-300 ease-in-out active:-rotate-180 hover:scale-110">
                         <i class="fa-solid fa-rotate-left text-[1.5rem] "></i>
                     </button>
 
                     <!-- Redo -->
-                    <button class="redo duration-300 ease-in-out focus:rotate-180 hover:scale-110">
+                    <button class="redo duration-300 ease-in-out active:rotate-180 hover:scale-110">
                         <i class="fa-solid fa-rotate-right text-[1.5rem]"></i>
                     </button>
                 </div>
@@ -49,21 +54,27 @@
                 </button>
 
                 <!-- Button For Theme Change -->
-                <button class=" hover:scale-110 duration-500 ease-in-out text-[color:var(--primary-color)]">
-                    <!-- <i class="fa-solid fa-moon text-[1.5rem] "></i> -->
-                    <i class="fa-solid fa-sun text-[1.5rem]"></i>
+                <button
+                    class="switch-theme  hover:scale-110 duration-500 ease-in-out text-[color:var(--primary-color)]">
+                    <i class="fa-solid fa-sun text-[1.5rem] duration-300 ease-in-out"></i>
                 </button>
 
-                <div class="relative text-[color:var(--primary-text-color)]">
+                <!-- Drop Down List -->
+                <div class="relative ">
+                    <!-- Drop Menu -->
                     <button class="drop-menu">
                         <i class="fa-solid fa-bars  text-[1.5rem] duration-500 ease-in-out"></i>
                     </button>
                     <div
-                        class="drop-menu-items-container absolute top-[4rem] -right-1 translate-x-[45%] -translate-y-[70%] scale-0 -z-10 duration-500 ease-in-out ">
-                        <nav class="bg-[color:var(--background-color)] shadow-lg shadow-gray-500 px-6 py-4 rounded-md">
+                        class="drop-menu-items-container absolute top-[4rem] -right-1 translate-x-[45%] -translate-y-[70%] scale-0 -z-10 duration-500 ease-in-out text-[color:var(--primary-text-color)]">
+
+                        <!-- Drop List -->
+                        <nav
+                            class="bg-[color:var(--background-color)] shadow-lg shadow-gray-500 px-6 py-4 rounded-md duration-300 ease-in-out">
                             <div class="flex flex-col gap-8 items-center justify-around ">
+
                                 <!-- save to local storage -->
-                                <button class="save-storage flex" title="save local storage">
+                                <button class="save-storage flex " title="save local storage">
                                     <i class="fa-solid fa-download text-[1.5rem]"></i>
                                     <h1 class="ml-1 text-[1.2rem] font-bold hidden sm:block">
                                         Save
@@ -104,12 +115,21 @@
             </div>
         </nav>
     </header>
+
+    <!-- Left Side Tool Bar -->
     <main
-        class="absolute left-[2%] top-[50%] -translate-y-[45%] bg-[color:var(--background-color)] border-2 border-gray-400 px-4 py-6 rounded-full shadow-md shadow-gray-500 z-20">
-        <div class="tools left flex flex-col gap-[1.2rem] text-[color:var(--primary-text-color)]">
-            <!-- Pen -->
+        class="absolute tools-container left-[1.5rem] top-[50%] -translate-y-[45%] bg-[color:var(--background-color)] border-2 border-gray-400 px-4 py-6 rounded-full shadow-md shadow-gray-500 z-20 duration-500 ease-in-out">
+        <div class="tools left flex flex-col gap-[1.2rem] text-[color:var(--primary-text-color)] relative">
+
+            <!-- Hide Unhide Tool Bar -->
+            <button
+                class="absolute hide-unhide top-1/2 left-24  -translate-y-1/2 hover:scale-125 active:scale-95 duration-300 ease-in-out">
+                <i class="fa-solid fa-angles-left text-[1rem]"></i>
+            </button>
+
+
             <div class="pen-container flex flex-col items-center justify-between">
-                <!-- Icon -->
+                <!-- Pen -->
                 <button class="pen header-icons-styles selected-icon-style" title="pen"><i
                         class="fa-solid fa-pen-clip text-[1.4rem]"></i>
                 </button>
@@ -121,41 +141,58 @@
                 <i class="fa-solid fa-eraser text-[1.5rem]"></i>
             </button>
 
+            <!-- Different Shapes -->
             <div class=" relative  flex justify-center items-center" title="shapes">
                 <button class="diff-shapes header-icons-styles">
                     <i class="fa-solid  fa-shapes text-[1.5rem]"></i>
                 </button>
+
+                <!-- Different Shapes Container -->
                 <div
                     class="absolute diff-shapes-container left-[5rem] px-6 py-3 bg-[color:var(--background-color)] shadow-md shadow-gray-400 rounded-md flex justify-center items-center gap-6 invisible scale-0 -translate-x-[70%] duration-300 ease-in-out -z-10 h-14 text-[color:var(--primary-text-color)] ">
+
+                    <!-- Circle Fill -->
                     <button class="flex items-center shape" data-value="circle-fill" title="circle-fill">
                         <i class="fa-solid fa-circle text-[1.8rem] "></i>
                     </button>
+
+                    <!-- Circle Stroke -->
                     <button class="flex items-center shape" data-value="circle-stroke" title="circle-stroke">
                         <i
                             class="fa-solid fa-circle text-[1.3rem] border-4 border-[color:var(--primary-color)] text-[color:var(--background-color)] rounded-full "></i>
                     </button>
+
+                    <!-- Rectangle Fill -->
                     <button class="flex items-center shape" data-value="rectangle-fill" title="rectangle-fill">
                         <i class="fa-solid fa-square  text-[1.8rem]"></i>
                     </button>
+
+                    <!-- Rectangle Stroke -->
                     <button class="flex items-center shape" data-value="rectangle-stroke" title="rectangle-stroke">
                         <i
                             class="fa-solid fa-square text-[1rem] border-4 border-[color:var(--primary-color)] text-[color:var(--background-color)]"></i>
                     </button>
+
+                    <!-- Line -->
                     <button class="flex items-center shape" data-value="line" title="line">
                         <i class="fa-solid fa-lines-leaning text-[1.5rem] "></i>
                     </button>
+
                 </div>
             </div>
 
-            <div class="h-[0.2rem] bg-gray-500 rounded-full"></div>
+            <!-- Devider -->
+            <div class="h-[0.2rem] bg-gray-400 rounded-full"></div>
 
             <!-- Pen Tools -->
             <div class="relative  text-[color:var(--primary-text-color)] flex justify-center items-center">
+
                 <div class="pen-tool header-icons-styles">
                     <i class="fa-solid fa-pen-ruler text-[1.5rem]"></i>
                 </div>
                 <div class="absolute pen-tools-wrapper left-[5rem] -top-3 px-6 py-3 bg-[color:var(--background-color)] shadow-md shadow-gray-400 rounded-md flex  gap-6
                 invisible scale-0 -translate-x-[70%] duration-300 ease-in-out -z-10 h-14">
+
                     <!-- Color Selector -->
                     <div class="pen-color w-[2rem] aspect-square rounded-full overflow-hidden relative border-4 border-[color:var(--primary-color)]"
                         title=" color selector">
@@ -169,6 +206,8 @@
                     </div>
                 </div>
             </div>
+
+
             <!-- Background Color -->
             <div class="relative background-container flex items-center justify-between">
                 <!-- Icon -->
@@ -186,6 +225,8 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Sticky Notes -->
             <div class="">
                 <button class="add-notes header-icons-styles">
                     <i class="fa-solid fa-notes-medical text-[1.5rem]"></i>
@@ -193,13 +234,15 @@
             </div>
         </div>
     </main>
+
+    <!-- Canvas Container -->
     <div class="for-canvas">
+
+        <!-- Sticky Notes Container -->
         <div class="sticky-container flex">
         </div>
     </div>
 
-    <div class="notification-container flex flex-col flex-start absolute top-48 right-0 invisible">
-    </div>
 </body>
 
 </html>
