@@ -74,6 +74,7 @@ allShapesBtn.forEach(shapeBtn => {
         canvas.style.cursor = 'crosshair';
         currentPenSize = 10;
         currPenColor = penColor.firstElementChild.value;
+        penWidth.firstElementChild.value = currentPenSize;
         currShapeDraw = shapeBtn.getAttribute('data-value');
 
         // Show msg to the top left which shape selected
