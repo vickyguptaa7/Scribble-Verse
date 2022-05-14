@@ -274,8 +274,7 @@ clearCanvas.addEventListener('click', () => {
 function storeDrawn(x, y, size, color, erase, h, w, shape, StateArray) {
     const drawnObjectData = {
         x, y, size, color, erase, h, w, shape,
-    };
-    // console.log(line); 
+    }; 
 
     // this is to avoid the undo's which we have make and then we draw something so we dont that 
     // undo changes in redo so we remove that changes
