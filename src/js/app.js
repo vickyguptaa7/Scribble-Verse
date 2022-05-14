@@ -297,90 +297,17 @@ function getMousePosition(event) {
     };
 }
 
-// mouse click to start the drawing
-canvas.addEventListener('mousedown', (event) => {
-    // console.log("mstrt");
-    isMouseDown = true;
-    const currentPosition = getMousePosition(event);
-    context.moveTo(currentPosition.x, currentPosition.y);
-    context.beginPath();
-    context.lineWidth = currentPenSize;
-    context.lineCap = 'round';
-    context.strokeStyle = currPenColor;
-
-    // Store the data untill the mouse is up
-    eachStateArray = [];
-    if (currShapeDraw !== 'pen') {
-        // console.log("mdwn", currShapeDraw);
-        previewStateArray = [];
-        storeDrawn(
-            currentPosition.x,
-            currentPosition.y,
-            currentPenSize,
-            currPenColor,
-            isEraser,
-            currentPosition.h,
-            currentPosition.w,
-            currShapeDraw,
-            eachStateArray
-        );
-        storeDrawn(
-            currentPosition.x,
-            currentPosition.y,
-            currentPenSize,
-            currPenColor,
-            isEraser,
-            currentPosition.h,
-            currentPosition.w,
-            currShapeDraw,
-            previewStateArray
-        );
-    }
-})
-
-// while clicked move to draw
-canvas.addEventListener('mousemove', (event) => {
-    // console.log("mmove");
-    if (!isMouseDown) return;
-    if (currShapeDraw === 'pen') {
-        const currentPosition = getMousePosition(event);
-        context.lineTo(currentPosition.x, currentPosition.y);
-        context.stroke();
-        storeDrawn(
-            currentPosition.x,
-            currentPosition.y,
-            currentPenSize,
-            currPenColor,
-            isEraser,
-            currentPosition.h,
-            currentPosition.w,
-            currShapeDraw,
-            eachStateArray
-        );
-        return;
-    }
-    else {
-        // Drawing Shapes other than pen
-        const currentPosition = getMousePosition(event);
-        storeDrawn(
-            currentPosition.x,
-            currentPosition.y,
-            currentPenSize,
-            currPenColor,
-            isEraser,
-            currentPosition.h,
-            currentPosition.w,
-            currShapeDraw,
-            previewStateArray
-        );
-        createCanvas();
-        restoreCanvas();
-        // starting the path To Fix Small Issue Which Is if we draw circle stroke and then circle fill the for one instanse the circle stroke bcom circle fill 
-        context.beginPath();
-        context.moveTo(currentPosition.x, currentPosition.y);
-        drawShapes(previewStateArray);
-    }
-})
+// Touch 
+// Get Touch Position
+function getTouchPosition(event) {
+    const boundaries = canvas.getBoundingClientRect();
+    return {
+        x: event.changedTouches[0].clientX - boundaries.left,
+        y: event.changedTouches[0].clientY - boundaries.top,
+        h: boundaries.height,
+        w: boundaries.width
+    };
+}
 
 // The shape which was selected will be drawn 
 function selectedShapeDraw(shapeToDraw, x, y, w, h, color) {
@@ -469,12 +396,104 @@ function drawShapes(stateArray) {
     }
 }
 
-// unclicked to stop the drawing
-canvas.addEventListener('mouseup', (event) => {
-    // console.log("mend");
+
+
+// trigger when mouse/touch down
+// isMouse true -> mouse activity 
+// isMouse false then there is touch activity
+
+function startDraw(event, isMouse) {
+    console.log("mstrt");
+    isMouseDown = isMouse;
+    isTouched = !isMouse;
+    const currentPosition = (isMouse) ? getMousePosition(event) : getTouchPosition(event);
+    context.moveTo(currentPosition.x, currentPosition.y);
+    context.beginPath();
+    context.lineWidth = currentPenSize;
+    context.lineCap = 'round';
+    context.strokeStyle = currPenColor;
+
+    // Store the data untill the mouse is up
+    eachStateArray = [];
+    if (currShapeDraw !== 'pen') {
+        // console.log("mdwn", currShapeDraw);
+        previewStateArray = [];
+        storeDrawn(
+            currentPosition.x,
+            currentPosition.y,
+            currentPenSize,
+            currPenColor,
+            isEraser,
+            currentPosition.h,
+            currentPosition.w,
+            currShapeDraw,
+            eachStateArray
+        );
+        storeDrawn(
+            currentPosition.x,
+            currentPosition.y,
+            currentPenSize,
+            currPenColor,
+            isEraser,
+            currentPosition.h,
+            currentPosition.w,
+            currShapeDraw,
+            previewStateArray
+        );
+    }
+    // while clicked move to draw
+    if (isMouse)
+        canvas.addEventListener('mousemove', currentDraw);
+    else
+        canvas.addEventListener('touchmove', currentDraw);
+}
+
+function currentDraw(event) {
+    console.log("mmove");
+    const currentPosition = (isMouseDown) ? getMousePosition(event) : getTouchPosition(event);
+    if (currShapeDraw === 'pen') {
+        context.lineTo(currentPosition.x, currentPosition.y);
+        context.stroke();
+        storeDrawn(
+            currentPosition.x,
+            currentPosition.y,
+            currentPenSize,
+            currPenColor,
+            isEraser,
+            currentPosition.h,
+            currentPosition.w,
+            currShapeDraw,
+            eachStateArray
+        );
+        return;
+    }
+    else {
+        // Drawing Shapes other than pen
+        storeDrawn(
+            currentPosition.x,
+            currentPosition.y,
+            currentPenSize,
+            currPenColor,
+            isEraser,
+            currentPosition.h,
+            currentPosition.w,
+            currShapeDraw,
+            previewStateArray
+        );
+        createCanvas();
+        restoreCanvas();
+        // starting the path To Fix Small Issue Which Is if we draw circle stroke and then circle fill the for one instanse the circle stroke bcom circle fill 
+        context.beginPath();
+        context.moveTo(currentPosition.x, currentPosition.y);
+        drawShapes(previewStateArray);
+    }
+}
+
+function endDraw(event, isMouse) {
+    console.log("mend");
     if (currShapeDraw !== 'pen') {
         // If the shape is not free hand then 
-        let currentPosition = getMousePosition(event);
+        const currentPosition = (isMouse) ? getMousePosition(event) : getTouchPosition(event);
         storeDrawn(
             currentPosition.x,
             currentPosition.y,
@@ -504,140 +523,23 @@ canvas.addEventListener('mouseup', (event) => {
         drawnArray.push(eachStateArray);
         currentDrawState = drawnArray.length - 1;
     }
-    isMouseDown = false;
-})
-
-
-// Touch 
-// Get Touch Position
-function getTouchPosition(event) {
-    const boundaries = canvas.getBoundingClientRect();
-    return {
-        x: event.changedTouches[0].clientX - boundaries.left,
-        y: event.changedTouches[0].clientY - boundaries.top,
-        h: boundaries.height,
-        w: boundaries.width
-    };
+    if (isMouse)
+        canvas.removeEventListener('mousemove', currentDraw);
+    else
+        canvas.removeEventListener('touchmove', currentDraw);
 }
 
+// mouse click to start the drawing
+canvas.addEventListener('mousedown', (event) => startDraw(event, true));
+
+// unclicked to stop the drawing
+canvas.addEventListener('mouseup', (event) => endDraw(event, true));
+
+
 // Same for smartphone touch
-canvas.addEventListener('touchstart', (event) => {
-    isTouched = true;
-    // console.log("tstrt");
-    const currentPosition = getTouchPosition(event);
-    context.moveTo(currentPosition.x, currentPosition.y);
-    context.beginPath();
-    context.lineWidth = currentPenSize;
-    context.lineCap = 'round';
-    context.strokeStyle = currPenColor;
-    // Store the data untill the touch is end
-    eachStateArray = [];
-    if (currShapeDraw !== 'pen') {
-        // console.log("mdwn", currShapeDraw);
-        previewStateArray = [];
-        storeDrawn(
-            currentPosition.x,
-            currentPosition.y,
-            currentPenSize,
-            currPenColor,
-            isEraser,
-            currentPosition.h,
-            currentPosition.w,
-            currShapeDraw,
-            eachStateArray
-        );
-        storeDrawn(
-            currentPosition.x,
-            currentPosition.y,
-            currentPenSize,
-            currPenColor,
-            isEraser,
-            currentPosition.h,
-            currentPosition.w,
-            currShapeDraw,
-            previewStateArray
-        );
-    }
-})
+canvas.addEventListener('touchstart', (event) => startDraw(event, false));
 
-canvas.addEventListener('touchmove', (event) => {
-    // console.log("tmove");
-    if (!isTouched) return;
-    if (currShapeDraw === 'pen') {
-        const currentPosition = getTouchPosition(event);
-        // console.log(currentPosition);
-        context.lineTo(currentPosition.x, currentPosition.y);
-        context.stroke();
-        storeDrawn(
-            currentPosition.x,
-            currentPosition.y,
-            currentPenSize,
-            currPenColor,
-            isEraser,
-            currentPosition.h,
-            currentPosition.w,
-            currShapeDraw,
-            eachStateArray
-        );
-        return;
-    }
-    else {
-        const currentPosition = getTouchPosition(event);
-        storeDrawn(
-            currentPosition.x,
-            currentPosition.y,
-            currentPenSize,
-            currPenColor,
-            isEraser,
-            currentPosition.h,
-            currentPosition.w,
-            currShapeDraw,
-            previewStateArray
-        );
-        createCanvas();
-        restoreCanvas();
-        context.beginPath();
-        context.moveTo(currentPosition.x, currentPosition.y);
-        drawShapes(previewStateArray);
-    }
-})
-
-canvas.addEventListener('touchend', (event) => {
-    // console.log("tend");
-    if (currShapeDraw !== 'pen') {
-        // If the shape is not free hand then 
-        // console.log('rectangle');
-        let currentPosition = getTouchPosition(event);
-        storeDrawn(
-            currentPosition.x,
-            currentPosition.y,
-            currentPenSize,
-            currPenColor,
-            isEraser,
-            currentPosition.h,
-            currentPosition.w,
-            currShapeDraw,
-            eachStateArray
-        );
-        drawnArray.push(eachStateArray);
-        drawShapes(eachStateArray);
-        currentDrawState = drawnArray.length - 1;
-    }
-    else if (eachStateArray.length !== 0) {
-
-        // Avoid Small Bug That When We Get single object for which we cant draw anything so we add one more object
-        // One For The Reference of the start from where to start 
-        if (eachStateArray.length === 1) {
-            const tempObj = { ...eachStateArray[0] };
-            tempObj.x += 0.0001;
-            eachStateArray.push(tempObj);
-            console.log(eachStateArray);
-        }
-        drawnArray.push(eachStateArray);
-        currentDrawState = drawnArray.length - 1;
-    }
-    isTouched = false;
-})
+canvas.addEventListener('touchend', (event) => endDraw(event, false));
 
 
 
