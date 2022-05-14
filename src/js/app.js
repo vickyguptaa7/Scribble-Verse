@@ -35,27 +35,44 @@ let isPrevUndo = -1;
 let currShapeDraw = 'pen';
 let previewStateArray = [];
 
-// diff shapes
+
+// shows msg to the top left
+function showMessage(msg) {
+    selectedTool.textContent = msg;
+}
+
+// Remove The highlighted
+function removeHighlightedTool() {
+    allTools.forEach(tool => {
+        if (tool.classList.contains('selected-icon-style')) {
+            tool.classList.remove('selected-icon-style');
+        }
+    });
+}
+
+// diff shapes container will pop out
 diffShapes.addEventListener('click', () => {
     diffShapesContainer.classList.toggle('invisible');
     diffShapesContainer.classList.toggle('scale-0');
     diffShapesContainer.classList.toggle('-translate-x-[70%]');
 })
 
+// selecting the shape from the shape container
 allShapesBtn.forEach(shapeBtn => {
     shapeBtn.addEventListener('click', () => {
-        allTools.forEach(tool => {
-            if (tool.classList.contains('selected-icon-style')) {
-                tool.classList.remove('selected-icon-style');
-            }
-        })
+
+        removeHighlightedTool();
+
+        // Add highlight to the current tool shapes
         diffShapes.classList.add('selected-icon-style');
         isEraser = false;
         canvas.style.cursor = 'crosshair';
         currentPenSize = 10;
         currPenColor = penColor.firstElementChild.value;
         currShapeDraw = shapeBtn.getAttribute('data-value');
-        selectedTool.textContent = shapeBtn.getAttribute('data-value');
+
+        // Show msg to the top left which shape selected
+        showMessage(shapeBtn.getAttribute('data-value'));
     })
 })
 
@@ -69,20 +86,17 @@ bucketColor.addEventListener('input', () => {
 // Setting pen color
 penColor.addEventListener('input', () => {
     isEraser = false;
+    switchToPen();
     currPenColor = penColor.firstElementChild.value;
 })
 
 //Setting Eraser 
 eraser.addEventListener('click', () => {
-    selectedTool.textContent = 'Eraser';
+    showMessage('Eraser');
     isEraser = true;
     canvas.style.cursor = 'url(./src/Img/eraser.png) 12 25, auto';
     currShapeDraw = 'pen';
-    allTools.forEach(tool => {
-        if (tool.classList.contains('selected-icon-style')) {
-            tool.classList.remove('selected-icon-style');
-        }
-    })
+    removeHighlightedTool();
     eraser.classList.add('selected-icon-style');
     currPenColor = currBucketColor;
     currentPenSize = 20;
@@ -101,15 +115,8 @@ undo.addEventListener('click', undoOperation)
 
 redo.addEventListener('click', redoOperations)
 
-// From Keybaord
+// From Keybaord To Undo and Redo
 window.document.addEventListener('keydown', (event) => {
-    /*
-    cmd key -> 91
-    cntrol key -> 17
-    shift key -> 16
-    z key -> 90
-    y key -> 89
-    */
     if ((event.metaKey && event.shiftKey && event.key === 'z') || (event.ctrlKey && event.key === 'y')) {
         redoOperations();
     }
@@ -117,6 +124,7 @@ window.document.addEventListener('keydown', (event) => {
         undoOperation();
     }
 })
+
 
 // Undo Functions
 function undoOperation() {
@@ -126,8 +134,13 @@ function undoOperation() {
     currentDrawState--;
     createCanvas();
     restoreCanvas();
-    selectedTool.textContent = 'Undo';
-    setTimeout(switchToPen, 1000);
+    showMessage('Undo');
+
+    // in this style of passing the func bcoz i have to pass the arguments also
+    if (isEraser)
+        setTimeout(() => showMessage('eraser'), 1000);
+    else
+        setTimeout(() => showMessage(currShapeDraw), 1000);
 }
 
 // redoOperations
@@ -138,29 +151,26 @@ function redoOperations() {
     currentDrawState++;
     createCanvas();
     restoreCanvas();
-    selectedTool.textContent = 'Redo';
-    setTimeout(switchToPen, 1000);
+    showMessage('Redo');
+    // in this style of passing the func bcoz i have to pass the arguments also
+    if (isEraser)
+        setTimeout(() => showMessage('eraser'), 1000);
+    else
+        setTimeout(() => showMessage(currShapeDraw), 1000);
 }
 
 // Switch From Eraser To Pen
 function switchToPen() {
     currShapeDraw = 'pen';
     isEraser = false;
-    selectedTool.textContent = 'Pen';
+    showMessage('pen');
     canvas.style.cursor = 'url(./src/Img/Pen.png) 0 60,auto';
     currPenColor = penColor.firstElementChild.value;
     currentPenSize = 10;
-    allTools.forEach(tool => {
-        if (tool.classList.contains('selected-icon-style')) {
-            tool.classList.remove('selected-icon-style');
-        }
-    })
+    removeHighlightedTool();
     pen.classList.add('selected-icon-style');
     penWidth.firstElementChild.value = currentPenSize;
 }
-
-
-
 
 // Create Canvas
 function createCanvas() {
@@ -169,11 +179,10 @@ function createCanvas() {
     context.fillStyle = currBucketColor;
     context.fillRect(0, 0, canvas.width, canvas.height);
     forCanvas.appendChild(canvas);
-    // switchToPen();
 }
 
+// this function will avoid the hiding of the drawn object when canvas is resized.
 function restoreDataDueToResize() {
-    // this function will avoid the hiding of the drawn object when canvas is resized.
     if (drawnArray.length === 0) return;
     let newWidth = canvas.offsetWidth;
     let newHeight = canvas.offsetHeight;
@@ -193,6 +202,7 @@ function restoreDataDueToResize() {
     }
 }
 
+// resize the canvas as the browser resizes 
 window.addEventListener('resize', () => {
     createCanvas();
     console.log("Hello");
@@ -205,9 +215,15 @@ switchToPen();
 
 // Draw What is Stored in drawn array
 function restoreCanvas() {
+    // Traversing on the main array
     for (let j = 0; j <= currentDrawState; j++) {
+
+        // if any of the array of main array is undefined we just dont process it
         if (!drawnArray[j]) continue;
+
+        // traversing on the array of objects
         for (let i = 1; i < drawnArray[j].length; i++) {
+
             if (drawnArray[j][i].shape === 'pen') {
                 context.beginPath();
                 // we first move where we have to start the drawing
@@ -241,12 +257,16 @@ function restoreCanvas() {
 clearCanvas.addEventListener('click', () => {
     createCanvas();
     drawnArray = [];
-    selectedTool.textContent = 'Canvas Cleared';
-    setTimeout(switchToPen, 1500);
+    showMessage('Canvas Cleared');
+    if (isEraser)
+        setTimeout(() => showMessage('eraser'), 1000);
+    else
+        setTimeout(() => showMessage(currShapeDraw), 1000);
 });
 
+// store the object in state
 function storeDrawn(x, y, size, color, erase, h, w, shape, StateArray) {
-    const line = {
+    const drawnObjectData = {
         x, y, size, color, erase, h, w, shape,
     };
     // console.log(line); 
@@ -257,7 +277,7 @@ function storeDrawn(x, y, size, color, erase, h, w, shape, StateArray) {
     if (drawnArray.length !== currentDrawState) {
         drawnArray = drawnArray.splice(0, currentDrawState + 1);
     }
-    StateArray.push(line);
+    StateArray.push(drawnObjectData);
 }
 
 // Mouse Click
@@ -272,7 +292,7 @@ function getMousePosition(event) {
     };
 }
 
-// mouse click to draw
+// mouse click to start the drawing
 canvas.addEventListener('mousedown', (event) => {
     // console.log("mstrt");
     isMouseDown = true;
@@ -335,6 +355,7 @@ canvas.addEventListener('mousemove', (event) => {
         return;
     }
     else {
+        // Drawing Shapes other than pen
         const currentPosition = getMousePosition(event);
         storeDrawn(
             currentPosition.x,
@@ -356,6 +377,7 @@ canvas.addEventListener('mousemove', (event) => {
     }
 })
 
+// The shape which was selected will be drawn 
 function selectedShapeDraw(shapeToDraw, x, y, w, h, color) {
 
     switch (shapeToDraw) {
@@ -417,18 +439,14 @@ function drawShapes(stateArray) {
         return;
     }
 
-    // if (shape === 'pen'){
-    //     selectedShapeDraw(shape,currPosition.x,currPosition.y,width,height,color);
-    //     return;
-    // }
-
     if (shape.includes('circle')) {
         width = Math.abs(width);
         height = Math.abs(height);
+        let radius = Math.sqrt(height * height + width * width);
         // This Code is added to remove the circle + line issue which we can face during the making
         // circle stroke 
-        context.moveTo(currPosition.x + Math.max(height, width), currPosition.y);
-        selectedShapeDraw(shape, currPosition.x, currPosition.y, width, height, color);
+        context.moveTo(prevPosition.x + radius, prevPosition.y);
+        selectedShapeDraw(shape, prevPosition.x, prevPosition.y, radius, 0, color);
         return;
     }
 
@@ -437,15 +455,12 @@ function drawShapes(stateArray) {
     }
     else if (height > 0) {
         selectedShapeDraw(shape, currPosition.x, prevPosition.y, Math.abs(width), height, color);
-        // context.strokeRect(currPosition.x, prevPosition.y, Math.abs(width), height);
     }
     else if (width > 0) {
         selectedShapeDraw(shape, prevPosition.x, currPosition.y, width, Math.abs(height), color);
-        // context.strokeRect(prevPosition.x, currPosition.y, width, Math.abs(height));
     }
     else {
         selectedShapeDraw(shape, currPosition.x, currPosition.y, Math.abs(width), Math.abs(height), color);
-        // context.strokeRect(currPosition.x, currPosition.y, Math.abs(width), Math.abs(height));
     }
 }
 
@@ -479,7 +494,7 @@ canvas.addEventListener('mouseup', (event) => {
             const tempObj = { ...eachStateArray[0] };
             tempObj.x += 0.0001;
             eachStateArray.push(tempObj);
-            console.log(eachStateArray);
+            // console.log(eachStateArray);
         }
         drawnArray.push(eachStateArray);
         currentDrawState = drawnArray.length - 1;
@@ -492,9 +507,6 @@ canvas.addEventListener('mouseup', (event) => {
 // Get Touch Position
 function getTouchPosition(event) {
     const boundaries = canvas.getBoundingClientRect();
-    // console.log(event.touches[0].screenX, event.touches[0].screenY);
-    // console.log(event.touches[0].clientX, event.touches[0].clientY);
-    // console.log(event);
     return {
         x: event.changedTouches[0].clientX - boundaries.left,
         y: event.changedTouches[0].clientY - boundaries.top,
@@ -503,6 +515,7 @@ function getTouchPosition(event) {
     };
 }
 
+// Same for smartphone touch
 canvas.addEventListener('touchstart', (event) => {
     isTouched = true;
     // console.log("tstrt");
@@ -627,8 +640,11 @@ canvas.addEventListener('touchend', (event) => {
 // save to local storage
 saveStorage.addEventListener('click', () => {
     localStorage.setItem('saveCanvas', JSON.stringify(drawnArray));
-    selectedTool.textContent = 'Canvas Saved';
-    setTimeout(switchToPen, 1500);
+    showMessage('Canvas Saved');
+    if (isEraser)
+        setTimeout(() => showMessage('eraser'), 1000);
+    else
+        setTimeout(() => showMessage(currShapeDraw), 1000);
 })
 
 // load from local storage
@@ -636,13 +652,19 @@ loadStorage.addEventListener('click', () => {
     if (localStorage.getItem('saveCanvas')) {
         drawnArray = JSON.parse(localStorage.saveCanvas);
         currentDrawState = drawnArray.length - 1;
-        selectedTool.textContent = 'Canvas Loaded';
+        showMessage('Canvas Loaded');
         restoreCanvas();
-        setTimeout(switchToPen, 1500);
+        if (isEraser)
+            setTimeout(() => showMessage('eraser'), 1000);
+        else
+            setTimeout(() => showMessage(currShapeDraw), 1000);
     }
     else {
-        selectedTool.textContent = 'Canvas Not Found';
-        setTimeout(switchToPen, 1500);
+        showMessage('Canvas Not Found');
+        if (isEraser)
+            setTimeout(() => showMessage('eraser'), 1000);
+        else
+            setTimeout(() => showMessage(currShapeDraw), 1000);
     }
 
 })
@@ -650,8 +672,11 @@ loadStorage.addEventListener('click', () => {
 // clear local storage
 deleteStorage.addEventListener('click', () => {
     localStorage.removeItem('saveCanvas');
-    selectedTool.textContent = 'Cleared Local Storage';
-    setTimeout(switchToPen, 1500);
+    showMessage('Cleared Local Storage');
+    if (isEraser)
+        setTimeout(() => showMessage('eraser'), 1000);
+    else
+        setTimeout(() => showMessage(currShapeDraw), 1000);
 })
 
 
@@ -659,8 +684,11 @@ deleteStorage.addEventListener('click', () => {
 saveImage.addEventListener('click', () => {
     saveImage.firstElementChild.href = canvas.toDataURL('image/jpeg', 1);
     saveImage.firstElementChild.download = 'paint-example.jpeg';
-    selectedTool.textContent = 'Image File Saved';
-    setTimeout(switchToPen, 1500);
+    showMessage('Image File Saved');
+    if (isEraser)
+        setTimeout(() => showMessage('eraser'), 1000);
+    else
+        setTimeout(() => showMessage(currShapeDraw), 1000);
 })
 
 /*
