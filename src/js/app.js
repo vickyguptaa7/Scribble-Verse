@@ -85,6 +85,7 @@ allShapesBtn.forEach(shapeBtn => {
 // Setting background color
 bucketColor.addEventListener('input', () => {
     currBucketColor = bucketColor.firstElementChild.value;
+    if (isEraser) currPenColor = currBucketColor;
     createCanvas();
     restoreCanvas();
 })
@@ -92,7 +93,6 @@ bucketColor.addEventListener('input', () => {
 // Setting pen color
 penColor.addEventListener('input', () => {
     isEraser = false;
-    switchToPen();
     currPenColor = penColor.firstElementChild.value;
 })
 
@@ -274,7 +274,7 @@ clearCanvas.addEventListener('click', () => {
 function storeDrawn(x, y, size, color, erase, h, w, shape, StateArray) {
     const drawnObjectData = {
         x, y, size, color, erase, h, w, shape,
-    }; 
+    };
 
     // this is to avoid the undo's which we have make and then we draw something so we dont that 
     // undo changes in redo so we remove that changes
