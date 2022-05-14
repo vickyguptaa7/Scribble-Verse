@@ -1,14 +1,14 @@
 {
-  "name": "progress_steps",
+  "name": "WhiteBoard",
   "version": "1.0.0",
-  "description": "",
+  "description": "WhiteBoard App provide drawing tool and Sticky Notes",
   "main": "index.js",
   "scripts": {
     "start": "vite",
     "build": "vite build"
   },
   "keywords": [],
-  "author": "",
+  "author": "Vicky Gupta",
   "license": "ISC",
   "devDependencies": {
     "autoprefixer": "^10.4.4",
