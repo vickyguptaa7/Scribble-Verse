@@ -403,7 +403,7 @@ function drawShapes(stateArray) {
 // isMouse false then there is touch activity
 
 function startDraw(event, isMouse) {
-    console.log("mstrt");
+    // console.log("mstrt");
     isMouseDown = isMouse;
     isTouched = !isMouse;
     const currentPosition = (isMouse) ? getMousePosition(event) : getTouchPosition(event);
@@ -449,7 +449,7 @@ function startDraw(event, isMouse) {
 }
 
 function currentDraw(event) {
-    console.log("mmove");
+    // console.log("mmove");
     const currentPosition = (isMouseDown) ? getMousePosition(event) : getTouchPosition(event);
     if (currShapeDraw === 'pen') {
         context.lineTo(currentPosition.x, currentPosition.y);
@@ -490,7 +490,7 @@ function currentDraw(event) {
 }
 
 function endDraw(event, isMouse) {
-    console.log("mend");
+    // console.log("mend");
     if (currShapeDraw !== 'pen') {
         // If the shape is not free hand then 
         const currentPosition = (isMouse) ? getMousePosition(event) : getTouchPosition(event);

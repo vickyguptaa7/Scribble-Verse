@@ -8,63 +8,80 @@ const deleteStorage = document.querySelector('.delete-storage');
 // Position Of the Selected StickyNote It Get Updated When We Move The note
 let posX = 0, posY = 0;
 
-// store the info which sticky note is moving to avoid the case sometime all moves 
-let isMouseDown = [];
-let isTouched = [];
-
 // Count Of The sticky notes created 
 let noOfNotes = 0;
 
+// To track the sticky notes 
+let isMouseDn;
+let isTouchStrt;
+let selectedStickyNote = null;
+
+// give zindex value to current selected stickynote so that it's comes to top 
+let zIndexs = 11;
+
+function selectStickyNoteForMovement(event, isMouse, stickyWrapper) {
+    selectedStickyNote = stickyWrapper;
+    selectedStickyNote.style.zIndex = zIndexs++;
+
+    // Get The Current Position Of The mouse when clicked on the notes
+    if (isMouse) {
+        posX = event.clientX - stickyWrapper.offsetLeft;
+        posY = event.clientY - stickyWrapper.offsetTop;
+        isMouseDn = true;
+    }
+    else {
+        posX = event.changedTouches[0].clientX - stickyWrapper.offsetLeft;
+        posY = event.changedTouches[0].clientY - stickyWrapper.offsetTop;
+        isTouchStrt = true;
+    }
+    // stickyWrapper.style.top = moveY + 'px';
+    // stickyWrapper.style.left = moveX + 'px';
+
+    // Add Listner only when the touch start or the click down moveListner
+    if (isMouse) {
+        window.addEventListener('mousemove', moveStickyNote);
+    }
+    else {
+        window.addEventListener('touchmove', moveStickyNote);
+    }
+}
+
+function moveStickyNote(event) {
+    // when mouse move we get the mousemovent from the event
+    let moveX, moveY;
+    if (isMouseDn) {
+        moveY = event.clientY - posY;
+        moveX = event.clientX - posX;
+    }
+    else {
+        moveY = event.changedTouches[0].clientY - posY;
+        moveX = event.changedTouches[0].clientX - posX;
+    }
+
+    // console.log(moveX, moveY);
+    // now as mouse move we move the sticky note according to the cursor
+    selectedStickyNote.style.top = moveY + 'px';
+    selectedStickyNote.style.left = moveX + 'px';
+}
+
+function endMovementOfStickyNote(event, isMouse) {
+    if (isMouse) isMouseDn = false;
+    else isTouchStrt = false;
+    if (isMouse) {
+        window.removeEventListener('mousemove', moveStickyNote);
+    }
+    else {
+        window.removeEventListener('touchmove', moveStickyNote);
+    }
+    selectedStickyNote = null;
+}
 
 // For pc to move sticky notes
 function addMoveWithMouseListner(stickyWrapper) {
 
-    stickyWrapper.addEventListener('mousedown', (event) => {
+    stickyWrapper.addEventListener('mousedown', (event) => selectStickyNoteForMovement(event, true, stickyWrapper));
 
-        // Get The Current Position Of The mouse when clicked on the notes
-        posX = event.clientX - stickyWrapper.offsetLeft;
-        posY = event.clientY - stickyWrapper.offsetTop;
-        // stickyWrapper.style.top = moveY + 'px';
-        // stickyWrapper.style.left = moveX + 'px';
-
-        // Make It True That We Have Selected that note and when when we move cursor the note
-        // Also moves
-        let stickyNo = stickyWrapper.getAttribute('data-no');
-        isMouseDown[stickyNo] = true;
-    })
-
-    stickyWrapper.addEventListener('mousemove', (event) => {
-        let stickyNo = stickyWrapper.getAttribute('data-no');
-
-        // verifying that the note on which mouse was clicked only that will get move
-        // avoid any other notes
-        if (!isMouseDown[stickyNo]) return;
-
-        // when mouse move we get the mousemovent from the event
-        let moveY = event.clientY - posY;
-        let moveX = event.clientX - posX;
-
-        // console.log(moveX, moveY);
-        // now as mouse move we move the sticky note according to the cursor
-        stickyWrapper.style.top = moveY + 'px';
-        stickyWrapper.style.left = moveX + 'px';
-    });
-
-    canvasContainer.addEventListener('mousemove', (event) => {
-        let stickyNo = stickyWrapper.getAttribute('data-no');
-        if (!isMouseDown[stickyNo]) return;
-
-        let moveY = event.clientY - posY;
-        let moveX = event.clientX - posX;
-        stickyWrapper.style.top = moveY + 'px';
-        stickyWrapper.style.left = moveX + 'px';
-    });
-
-    stickyWrapper.addEventListener('mouseup', () => {
-        // now remove the isMouseDown as now the sticky note will not move
-        let stickyNo = stickyWrapper.getAttribute('data-no');
-        isMouseDown[stickyNo] = false;
-    })
+    stickyWrapper.addEventListener('mouseup', (event) => endMovementOfStickyNote(event, true))
 
     stickyWrapper.addEventListener('drag', () => false)
 }
@@ -73,42 +90,9 @@ function addMoveWithMouseListner(stickyWrapper) {
 function addMoveWithTouchListner(stickyWrapper) {
 
     // Same As Above What We have done for the mouse Similar thing we have to do with the touch
-    stickyWrapper.addEventListener('touchstart', (event) => {
-        posX = event.changedTouches[0].clientX - stickyWrapper.offsetLeft;
-        posY = event.changedTouches[0].clientY - stickyWrapper.offsetTop;
-        // console.log(posX,posY);
-        // stickyWrapper.style.top = moveY + 'px';
-        // stickyWrapper.style.left = moveX + 'px';
-        let stickyNo = stickyWrapper.getAttribute('data-no');
-        isTouched[stickyNo] = true;
-    })
+    stickyWrapper.addEventListener('touchstart', (event) => selectStickyNoteForMovement(event, false, stickyWrapper));
 
-    stickyWrapper.addEventListener('touchmove', (event) => {
-        let stickyNo = stickyWrapper.getAttribute('data-no');
-        if (!isTouched[stickyNo]) return;
-
-        let moveY = event.changedTouches[0].clientY - posY;
-        let moveX = event.changedTouches[0].clientX - posX;
-
-        // console.log(moveX, moveY);
-        stickyWrapper.style.top = moveY + 'px';
-        stickyWrapper.style.left = moveX + 'px';
-    });
-
-    canvasContainer.addEventListener('touchmove', (event) => {
-        let stickyNo = stickyWrapper.getAttribute('data-no');
-        if (!isTouched[stickyNo]) return;
-
-        let moveY = event.changedTouches[0].clientY - posY;
-        let moveX = event.changedTouches[0].clientX - posX;
-        stickyWrapper.style.top = moveY + 'px';
-        stickyWrapper.style.left = moveX + 'px';
-    });
-
-    stickyWrapper.addEventListener('touchend', () => {
-        let stickyNo = stickyWrapper.getAttribute('data-no');
-        isTouched[stickyNo] = false;
-    })
+    stickyWrapper.addEventListener('touchend', (event) => endMovementOfStickyNote(event, false));
 
     stickyWrapper.addEventListener('drag', () => false)
 }
@@ -140,8 +124,6 @@ addNotesBtn.addEventListener('click', createNewNotes);
 
 function createNewNotes(noteInfo) {
     noOfNotes++;
-    isMouseDown.push(false);
-    isTouched.push(false);
     let stickyNote = document.createElement('div');
     stickyNote.classList.add('sticky-wrapper');
     stickyNote.setAttribute('data-no', `${noOfNotes - 1}`);
