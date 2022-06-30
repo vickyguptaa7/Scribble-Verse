@@ -92,7 +92,6 @@ bucketColor.addEventListener('input', () => {
 
 // Setting pen color
 penColor.addEventListener('input', () => {
-    isEraser = false;
     currPenColor = penColor.firstElementChild.value;
 })
 
@@ -412,6 +411,8 @@ function startDraw(event, isMouse) {
     context.lineWidth = currentPenSize;
     context.lineCap = 'round';
     context.strokeStyle = currPenColor;
+    if (isEraser)
+        context.strokeStyle = currBucketColor;
 
     // Store the data untill the mouse is up
     eachStateArray = [];
